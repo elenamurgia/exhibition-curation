@@ -11,7 +11,6 @@ function Homepage() {
         setIsLoading(true);
         getHarvardExhibitions()
             .then((data) => {
-                console.log("Fetched Data:", data); // Debug the response
                 if (data.length === 0) {
                     setError("No exhibition found")
                 } else {
