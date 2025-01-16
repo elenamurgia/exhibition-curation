@@ -15,9 +15,14 @@ export const getHarvardArtworks = async (page, size) => {
                 page: page,
                 size: size, 
                 fields: "id,title,primaryimageurl,people,dated",
+                hasimage: 1,
             },
         });
-        return response.data;
+        const filteredArtworks = response.data.records.filter(
+            (artwork) => artwork.primaryimageurl
+        );
+
+        return { ...response.data, records: filteredArtworks };
     } catch (error) {
         console.error("Error fetching artworks:", error);
         throw error;
