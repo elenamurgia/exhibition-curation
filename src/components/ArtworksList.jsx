@@ -9,7 +9,7 @@ function ArtworksList() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [page, setPage] = useState(1);
-    const [pageSize, setPageSize] = useState(10); // Default number of artworks per page
+    const [pageSize, setPageSize] = useState(10); 
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -29,7 +29,7 @@ function ArtworksList() {
     const handlePrevPage = () => setPage((prev) => Math.max(prev - 1, 1));
     const handlePageSizeChange = (e) => {
         setPageSize(parseInt(e.target.value, 10));
-        setPage(1); // Reset to first page when page size changes
+        setPage(1); 
     };
 
     if (isLoading) {
@@ -48,7 +48,6 @@ function ArtworksList() {
         <Container>
             <h2 className="mb-4">Artworks</h2>
 
-            {/* Pagination Controls */}
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <Button variant="secondary" onClick={handlePrevPage} disabled={page === 1}>
                     Previous Page
@@ -69,7 +68,6 @@ function ArtworksList() {
                 </Form.Select>
             </div>
 
-            {/* Artwork Cards */}
             <Row>
                 {artworks.map((artwork) => (
                     <Col key={artwork.id} xs={12} sm={6} md={4} lg={3}>
@@ -85,7 +83,6 @@ function ArtworksList() {
                 ))}
             </Row>
 
-            {/* Pagination Controls at the Bottom */}
             <div className="d-flex justify-content-between align-items-center mt-3">
                 <Button variant="secondary" onClick={handlePrevPage} disabled={page === 1}>
                     Previous Page
