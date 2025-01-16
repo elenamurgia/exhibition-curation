@@ -7,14 +7,17 @@ const harvardApi = axios.create({
 });
 
 
-export const getHarvardExhibitions = async () => {
+export const getHarvardArtworks = async (page = 1) => {
     try {
-        const response = await harvardApi.get(`/exhibition`, {
+        const response = await harvardApi.get(`/object`, {
             params: {
                 apikey: harvardApiKey, 
+                size: 20, 
+                page: page, 
+                classification: "Paintings",
             },
         });
-        return response.data.records; 
+        return response.data; 
     } catch (error) {
         console.error("Error fetching exhibitions:", error);
         throw error; 
