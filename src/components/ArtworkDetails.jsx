@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getHarvardArtworkById } from "../utils/api"; // Add a new utility function for fetching by ID
+import { getHarvardArtworkById } from "../utils/api"; 
 import { Spinner } from "react-bootstrap";
 
 function ArtworkDetails() {
-    const { id } = useParams(); // Get the ID from the URL
+    const { id } = useParams(); 
     const [artwork, setArtwork] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
