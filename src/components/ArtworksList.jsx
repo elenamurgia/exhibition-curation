@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getHarvardArtworks } from '../utils/api';
+import { getUnifiedArtworks } from '../utils/api';
 import ArtworkCard from "./ArtworkCard";
 import { Row, Col, Container, Spinner, Button, Form } from "react-bootstrap";
 
@@ -14,10 +14,11 @@ function ArtworksList() {
 
     useEffect(() => {
         setIsLoading(true);
-        getHarvardArtworks(page, pageSize)
+        getUnifiedArtworks(page, pageSize)
             .then((data) => {
-                setArtworks(data.records || []);
+                setArtworks(data || []);
                 setIsLoading(false);
+                console.log(data)
             })
             .catch((err) => {
                 setError("Failed to fetch artworks. Please try again.");
