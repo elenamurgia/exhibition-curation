@@ -18,7 +18,6 @@ function ArtworksList() {
             .then((data) => {
                 setArtworks(data || []);
                 setIsLoading(false);
-                console.log(data)
             })
             .catch((err) => {
                 setError("Failed to fetch artworks. Please try again.");
