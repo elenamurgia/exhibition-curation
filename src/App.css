@@ -40,3 +40,53 @@
 .read-the-docs {
   color: #888;
 }
+
+
+.artwork-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
+    gap: 16px; 
+    margin-top: 1rem;
+}
+
+.artwork-card {
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.artwork-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.artwork-card img {
+    width: 100%;
+    height: 200px; 
+    object-fit: cover;
+}
+
+.artwork-card-body {
+    padding: 8px;
+    text-align: center;
+}
+
+.artwork-card-title {
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 4px 0;
+}
+
+.artwork-card-artist {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.artwork-card-date {
+    font-size: 0.8rem;
+    color: #777;
+}
