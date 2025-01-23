@@ -1,44 +1,27 @@
-import React from "react";
-import { Card, Button } from "react-bootstrap";
+import React from 'react';
+import { Card } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
-function ArtworkCard({ image, title, artist, date, onAddToGallery, onViewDetails }) {
+const ArtworkCard = ({ id, title, image, artist, date, source }) => {
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        navigate(`/artworks/${source}/${id}`);
+    };
+
     return (
-        <Card style={{ marginBottom: "1rem", borderRadius: "8px"}}>
-            <Card.Img
-                variant="top"
-                src={image}
-                alt={title}
-                style={{ height: "200px", objectFit: "cover" }}
-            />
+        <Card className="mb-4 artwork-card" onClick={handleClick} style={{ cursor: 'pointer' }}>
+            <Card.Img variant="top" src={image} alt={title} />
             <Card.Body>
-                <Card.Title style={{ fontSize: "1rem", fontWeight: "bold" }}>{title}</Card.Title>
-                <Card.Text style={{ fontSize: "0.9rem", color: "#555" }}> 
-                    <strong>Artist:</strong> {artist}
+                <Card.Title>{title}</Card.Title>
+                <Card.Text>
+                    <strong>Artist:</strong> {artist}<br />
+                    <strong>Date:</strong> {date}<br />
+                    <strong>Source:</strong> {source}
                 </Card.Text>
-                {date && (
-                    <Card.Text style={{ fontSize: "0.8rem", color:"#777" }}>
-                        <strong>Date:</strong> {date}
-                    </Card.Text>
-                )}
-                <div className="d-flex justify-conteent-between">
-                    <Button
-                        variant="primary"
-                        size="sm"
-                        onClick={onViewDetails}
-                    >
-                        View Details
-                    </Button>
-                    <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={onAddToGallery}
-                    >
-                        Add to My Gallery
-                    </Button>
-                </div>
             </Card.Body>
         </Card>
-    )
-}
+    );
+};
 
 export default ArtworkCard;
