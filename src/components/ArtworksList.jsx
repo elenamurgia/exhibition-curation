@@ -38,10 +38,10 @@ const ArtworksList = () => {
                 </Row>
             )}
             <div className="d-flex justify-content-between mt-3">
-                <Button onClick={() => setPage((prev) => Math.max(prev - 1, 1))} disabled={page === 1}>
+                <Button onClick={() => setPage((prev) => Math.max(prev - 1, 1))} disabled={page === 1} variant="secondary">
                     Previous
                 </Button>
-                <Button onClick={() => setPage((prev) => prev + 1)}>
+                <Button onClick={() => setPage((prev) => prev + 1)} variant="secondary">
                     Next
                 </Button>
             </div>
