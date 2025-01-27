@@ -7,7 +7,7 @@ import Header from "./components/Header";
 import SearchResults from "./components/SearchResults";
 
 const App = () => (
-  <div>
+  <div className="row justify-content-center align-items-center">
     <Header />
     <div className="row justify-content-center align-items-center">
       <Routes>

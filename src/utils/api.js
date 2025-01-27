@@ -8,7 +8,6 @@ const rijksmuseumApi = 'https://www.rijksmuseum.nl/api/en';
 const metApi = 'https://collectionapi.metmuseum.org/public/collection/v1';
 const articApi = 'https://api.artic.edu/api/v1';
 
-// Configure axios instance
 const axiosInstance = axios.create({
     timeout: 20000, 
 });
@@ -56,6 +55,11 @@ export const getHarvardArtworkById = async (id) => {
             image: artwork.primaryimageurl,
             artist: artwork.people?.[0]?.name || 'Unknown Artist',
             date: artwork.dated,
+            technique: artwork.technique,
+            medium: artwork.medium,
+            dimensions: artwork.dimensions,
+            culture: artwork.culture,
+            description: artwork.description,
             source: 'Harvard Art Museums',
         };
     } catch (error) {
@@ -128,7 +132,11 @@ export const getRijksmuseumArtworkById = async (id) => {
             title: artwork.title,
             image: artwork.webImage?.url,
             artist: artwork.principalOrFirstMaker,
-            date: artwork.longTitle,
+            date: artwork.dating?.presentingDate,
+            technique: artwork.technique,
+            medium: artwork.materials?.join(', ') || 'Unknown Medium',
+            dimensions: artwork.dimensions?.map((d) => `${d.dimension} (${d.unit})`).join(', ') || 'Not specified',
+            description: artwork.label?.description,
             source: 'Rijksmuseum',
         };
     } catch (error) {
@@ -174,7 +182,7 @@ export const getArticArtworks = async (page = 1, size = 10) => {
             },
         });
         return response.data.data
-            .filter((artwork) => artwork.image_id) // Ensure images exist
+            .filter((artwork) => artwork.image_id) 
             .map((artwork) => ({
                 id: artwork.id,
                 title: artwork.title,
@@ -200,6 +208,9 @@ export const getArticArtworkById = async (id) => {
             image: `https://www.artic.edu/iiif/2/${artwork.image_id}/full/843,/0/default.jpg`,
             artist: artwork.artist_title || 'Unknown Artist',
             date: artwork.date_display,
+            medium: artwork.medium_display,
+            dimensions: artwork.dimensions,
+            description: artwork.thumbnail?.alt_text || 'No description available',
             source: 'Art Institute of Chicago',
         };
     } catch (error) {
@@ -274,10 +285,14 @@ export const getMetArtworkById = async (id) => {
         const artwork = response.data;
         return {
             id: artwork.objectID?.toString(),
-            title: artwork.title || "Untitled",
+            title: artwork.title || 'Untitled',
             image: artwork.primaryImage || artwork.primaryImageSmall,
             artist: artwork.artistDisplayName || 'Unknown Artist',
             date: artwork.objectDate,
+            medium: artwork.medium,
+            dimensions: artwork.dimensions,
+            culture: artwork.culture,
+            creditLine: artwork.creditLine,
             source: 'MET Museum',
         };
     } catch (error) {
