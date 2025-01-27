@@ -8,7 +8,7 @@ function ArtworkDetails() {
     const [artwork, setArtwork] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [showModal, setShowModal] = useState(false); // State to handle modal visibility
+    const [showModal, setShowModal] = useState(false); 
 
     
     useEffect(() => {
@@ -25,11 +25,11 @@ function ArtworkDetails() {
     }, [id, source]);
 
     const handleImageClick = () => {
-        setShowModal(true); // Open the modal when the image is clicked
+        setShowModal(true); 
     };
 
     const handleCloseModal = () => {
-        setShowModal(false); // Close the modal
+        setShowModal(false); 
     };
 
     if (isLoading) {
@@ -55,16 +55,14 @@ function ArtworkDetails() {
                 src={artwork.image || artwork.primaryimageurl}
                 alt={artwork.title}
                 className="artwork-details-img"
-                style={{ cursor: "pointer" }} // Indicate it's clickable
-                onClick={handleImageClick} // Handle click on the image
+                style={{ cursor: "pointer" }} 
+                onClick={handleImageClick} 
             />
             <div className="artwork-details-info">
                 <p><strong>Artist:</strong> {artwork.artist || "Unknown Artist"}</p>
                 <p><strong>Date:</strong> {artwork.date || "Unknown Date"}</p>
                 <p><strong>Technique:</strong> {artwork.technique || "Not specified"}</p>
             </div>
-
-            {/* Modal to display the larger image */}
             <Modal show={showModal} onHide={handleCloseModal} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>{artwork.title}</Modal.Title>
