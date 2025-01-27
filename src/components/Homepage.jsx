@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Spinner, Button } from 'react-bootstrap';
+import { Container, Row, Col, Spinner, Button, Carousel } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { getUnifiedArtworks } from '../utils/api';
 import ArtworkCard from './ArtworkCard';
+import ManetImage from '../assets/Manet.jpg';
 
 const Homepage = () => {
     const [artworks, setArtworks] = useState([]);
@@ -13,7 +14,7 @@ const Homepage = () => {
         const fetchArtworks = async () => {
             setLoading(true);
             try {
-                const data = await getUnifiedArtworks(1, 6); // Fetch only 6 artworks
+                const data = await getUnifiedArtworks(1, 6); 
                 setArtworks(data);
             } catch (error) {
                 console.error('Failed to fetch artworks', error);
@@ -25,28 +26,67 @@ const Homepage = () => {
     }, []);
 
     const handleViewMore = () => {
-        navigate('/artworks'); // Redirect to ArtworksList page
+        navigate('/artworks'); 
     };
 
+    const groupedArtworks = artworks.reduce((result, artwork, index) => {
+        const groupIndex = Math.floor(index / 4); 
+        if (!result[groupIndex]) result[groupIndex] = [];
+        result[groupIndex].push(artwork);
+        return result;
+    }, []);
+
     return (
-        <Container className="homepage-container">
-            <h1 className="homepage-title">Welcome to your Art Exhibition</h1>
-            {loading ? (
-                <Spinner animation="border" />
-            ) : (
-                <Row className="homepage-gallery">
-                    {artworks.map((art) => (
-                        <Col md={4} sm={6} xs={12} key={art.id}>
-                            <ArtworkCard key={art.id} {...art} />
-                        </Col>
-                    ))}
-                </Row>
-            )}
-            <div className="text-center mt-4">
-                <Button variant="primary" onClick={handleViewMore}>
-                    View More
-                </Button>
+        <Container >
+            <div className="hero-image">
+                <h1 className="hero-title">Explore the World of Art</h1>
+                <img src={ManetImage} alt="Art Showcase" class="img-fluid"/>
             </div>
+            {loading ? (
+                <div className="loading-container">
+                    <Spinner animation="border" style={{ width: '4rem', height: '4rem' }} />
+                    <p className="loading-text">Loading...</p>
+                </div>
+            ) : (
+                <>
+                    <div className="carousel-container">
+                        <Row className="justify-content-between align-items-center">
+                            <Col xs="auto">
+                                <h2 className="carousel-title">Featured Artworks</h2>
+                            </Col>
+                            <Col xs="auto">
+                                <Button
+                                    type="button"
+                                    className="btn btn-secondary"
+                                    onClick={handleViewMore}
+                                >
+                                    View All
+                                </Button>
+                            </Col>
+                        </Row>
+                        <Carousel class="carousel slide" data-bs-ride="carousel">
+                            {groupedArtworks.map((group, idx) => (
+                                <Carousel.Item key={idx}>
+                                    <Row className="justify-content-center">
+                                        {group.map((artwork) => (
+                                            <Col
+                                                key={artwork.id}
+                                                xl={3}
+                                                lg={4}
+                                                md={6}
+                                                sm={12}
+                                                className="artwork-col"
+                                            >
+                                                <ArtworkCard {...artwork} />
+                                            </Col>
+                                        ))}
+                                    </Row>
+                                </Carousel.Item>
+                            ))}
+                        </Carousel>
+                    </div>
+                </>
+            )}
         </Container>
     );
 };

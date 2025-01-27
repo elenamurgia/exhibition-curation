@@ -24,7 +24,7 @@ const ArtworksList = () => {
     }, [page]);
 
     return (
-        <Container>
+        <Container >
             <h2 className="mb-4">Artworks</h2>
             {loading ? (
                 <Spinner animation="border" />
