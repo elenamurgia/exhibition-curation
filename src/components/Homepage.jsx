@@ -40,7 +40,7 @@ const Homepage = () => {
         <Container >
             <div>
                 <h1 className="hero-title">Explore the World of Art</h1>
-                <img src={ManetImage} alt="Art Showcase" class="img-fluid" style={{ width: '100%', height: "auto" }}/>
+                <img src={ManetImage} alt="Art Showcase" className="img-fluid" style={{ width: '100%', height: "auto" }}/>
             </div>
             {loading ? (
                 <div className="loading-container">
@@ -64,7 +64,7 @@ const Homepage = () => {
                                 </Button>
                             </Col>
                         </Row>
-                        <Carousel class="carousel slide" data-bs-ride="carousel">
+                        <Carousel className="carousel slide" data-bs-ride="carousel">
                             {groupedArtworks.map((group, idx) => (
                                 <Carousel.Item key={idx}>
                                     <Row className="justify-content-center">
