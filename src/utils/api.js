@@ -330,9 +330,8 @@ const searchMetArtworks = async (query, page = 1, size = 40) => {
     }
 };
 
-
 // Unified Artworks
-export const getUnifiedArtworks = async (page = 1, size = 40) => {
+export const getUnifiedArtworks = async (page = 1, size = 40, museum = "") => {
     try {
         const [harvard, rijksmuseum, artic, met] = await Promise.all([
             getHarvardArtworks(page, size),
@@ -340,7 +339,11 @@ export const getUnifiedArtworks = async (page = 1, size = 40) => {
             getArticArtworks(page, size),
             getMetArtworks(page, size),
         ]);
-        return [...harvard, ...rijksmuseum, ...artic, ...met];
+        let allArtworks = [...harvard, ...rijksmuseum, ...artic, ...met];
+        if (museum) {
+            allArtworks = allArtworks.filter((artwork) => artwork.source === museum);
+        }
+        return allArtworks;
     } catch (error) {
         console.error('Error fetching unified artworks:', error.message);
         return [];
