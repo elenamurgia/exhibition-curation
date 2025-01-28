@@ -28,10 +28,8 @@ const ArtworksList = () => {
 
     const handleMuseumFilter = (selectedMuseum) => {
         if (selectedMuseum === "") {
-      // If "All Museums" is selected, reset to all artworks
         setFilteredArtworks(artworks);
         } else {
-      // Filter by selected museum
         const filtered = artworks.filter(
             (artwork) => artwork.source === selectedMuseum
         );
@@ -39,10 +37,29 @@ const ArtworksList = () => {
         }
     };
 
+    const handleDateFilter = (startDate, endDate) => {
+        const filtered = artworks.filter((artwork) => {
+            const artworkDate = parseInt(artwork.date, 10); 
+            if (isNaN(artworkDate)) return false; 
+            if (startDate && endDate) {
+                return artworkDate >= startDate && artworkDate <= endDate;
+            } else if (startDate) {
+                return artworkDate >= startDate;
+            } else if (endDate) {
+                return artworkDate <= endDate;
+            }
+            return true; 
+        });
+        setFilteredArtworks(filtered);
+    };
+
     return (
         <Container >
             <h2 className="mb-4">Artworks</h2>
-            <ArtworkFilter onFilterChange={handleMuseumFilter} />
+            <ArtworkFilter 
+                onFilterChange={handleMuseumFilter} 
+                onDateFilterChange={handleDateFilter}
+            />
             {loading ? (
                 <Spinner animation="border" />
             ) : (

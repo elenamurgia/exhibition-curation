@@ -331,17 +331,29 @@ const searchMetArtworks = async (query, page = 1, size = 40) => {
 };
 
 // Unified Artworks
-export const getUnifiedArtworks = async (page = 1, size = 40, museum = "") => {
+export const getUnifiedArtworks = async (page = 1, size = 40, museum = "", startDate = "", endDate = "") => {
     try {
-        const [harvard, rijksmuseum, artic, met] = await Promise.all([
-            getHarvardArtworks(page, size),
-            getRijksmuseumArtworks(page, size),
-            getArticArtworks(page, size),
-            getMetArtworks(page, size),
-        ]);
-        let allArtworks = [...harvard, ...rijksmuseum, ...artic, ...met];
+        let allArtworks = [...(await getHarvardArtworks(page, size)),
+            ...(await getRijksmuseumArtworks(page, size)),
+            ...(await getArticArtworks(page, size)),
+            ...(await getMetArtworks(page, size))
+        ];
         if (museum) {
             allArtworks = allArtworks.filter((artwork) => artwork.source === museum);
+        }
+        if (startDate || endDate) {
+            allArtworks = allArtworks.filter((artwork) => {
+                const artworkDate = parseInt(artwork.date, 10);
+                if (isNaN(artworkDate)) return false;
+                if (startDate && endDate) {
+                    return artworkDate >= startDate && artworkDate <= endDate;
+                } else if (startDate) {
+                    return artworkDate >= startDate;
+                } else if (endDate) {
+                    return artworkDate <= endDate;
+                }
+                return true;
+            });
         }
         return allArtworks;
     } catch (error) {
