@@ -9,11 +9,11 @@ const metApi = 'https://collectionapi.metmuseum.org/public/collection/v1';
 const articApi = 'https://api.artic.edu/api/v1';
 
 const axiosInstance = axios.create({
-    timeout: 20000, 
+    timeout: 30000, 
 });
 
 // Harvard API
-export const getHarvardArtworks = async (page = 1, size = 40) => {
+export const getHarvardArtworks = async (page = 1, size = 20) => {
     try {
         const response = await axiosInstance.get(`${harvardApi}/object`, {
             params: {
@@ -67,7 +67,7 @@ export const getHarvardArtworkById = async (id) => {
     }
 };
 
-const searchHarvardArtworks = async (query, page = 1, size = 40) => {
+const searchHarvardArtworks = async (query, page = 1, size = 20) => {
     try {
         const response = await axiosInstance.get(`${harvardApi}/object`, {
             params: {
@@ -95,7 +95,7 @@ const searchHarvardArtworks = async (query, page = 1, size = 40) => {
 };
 
 // Rijksmuseum API
-export const getRijksmuseumArtworks = async (page = 1, size = 40) => {
+export const getRijksmuseumArtworks = async (page = 1, size = 20) => {
     try {
         const response = await axiosInstance.get(`${rijksmuseumApi}/collection`, {
             params: {
@@ -144,7 +144,7 @@ export const getRijksmuseumArtworkById = async (id) => {
     }
 };
 
-const searchRijksmuseumArtworks = async (query, page = 1, size = 40) => {
+const searchRijksmuseumArtworks = async (query, page = 1, size = 20) => {
     try {
         const response = await axiosInstance.get(`${rijksmuseumApi}/collection`, {
             params: {
@@ -170,7 +170,7 @@ const searchRijksmuseumArtworks = async (query, page = 1, size = 40) => {
 };
 
 // Art Institute of Chicago API
-export const getArticArtworks = async (page = 1, size = 40) => {
+export const getArticArtworks = async (page = 1, size = 20) => {
     try {
         const response = await axiosInstance.get(`${articApi}/artworks`, {
             params: {
@@ -216,7 +216,7 @@ export const getArticArtworkById = async (id) => {
     }
 };
 
-const searchArticArtworks = async (query, page = 1, size = 40) => {
+const searchArticArtworks = async (query, page = 1, size = 20) => {
     try {
         const response = await axiosInstance.get(`${articApi}/artworks/search`, {
             params: {
@@ -242,7 +242,7 @@ const searchArticArtworks = async (query, page = 1, size = 40) => {
 };
 
 // MET Museum API
-export const getMetArtworks = async (page = 1, size = 40) => {
+export const getMetArtworks = async (page = 1, size = 20) => {
     try {
         const response = await axiosInstance.get(`${metApi}/objects`);
         const objectIDs = response.data.objectIDs.slice((page - 1) * size, page * size);
@@ -295,7 +295,7 @@ export const getMetArtworkById = async (id) => {
     }
 };
 
-const searchMetArtworks = async (query, page = 1, size = 40) => {
+const searchMetArtworks = async (query, page = 1, size = 20) => {
     try {
         const response = await axiosInstance.get(`${metApi}/search`, {
             params: {
@@ -331,17 +331,41 @@ const searchMetArtworks = async (query, page = 1, size = 40) => {
 };
 
 // Unified Artworks
-export const getUnifiedArtworks = async (page = 1, size = 40, museum = "", startDate = "", endDate = "") => {
+export const getUnifiedArtworks = async (page = 1, size = 20, museum = "", startDate = "", endDate = "") => {
     try {
-        let allArtworks = [...(await getHarvardArtworks(page, size)),
-            ...(await getRijksmuseumArtworks(page, size)),
-            ...(await getArticArtworks(page, size)),
-            ...(await getMetArtworks(page, size))
-        ];
+        console.log('Fetching Harvard artworks...');
+        const harvardArtworks = await getHarvardArtworks(page, size).catch((error) => {
+            console.error('Harvard API error:', error.message);
+            return [];
+        });
+
+        console.log('Fetching Rijksmuseum artworks...');
+        const rijksmuseumArtworks = await getRijksmuseumArtworks(page, size).catch((error) => {
+            console.error('Rijksmuseum API error:', error.message);
+            return [];
+        });
+
+        console.log('Fetching Art Institute of Chicago artworks...');
+        const articArtworks = await getArticArtworks(page, size).catch((error) => {
+            console.error('Art Institute of Chicago API error:', error.message);
+            return [];
+        });
+
+        console.log('Fetching MET artworks...');
+        const metArtworks = await getMetArtworks(page, size).catch((error) => {
+            console.error('MET API error:', error.message);
+            return [];
+        });
+
+        let allArtworks = [...harvardArtworks, ...rijksmuseumArtworks, ...articArtworks, ...metArtworks];
+
         if (museum) {
-            allArtworks = allArtworks.filter((artwork) => artwork.source === museum);
+            console.log('Filtering by museum:', museum);
+            allArtworks = allArtworks.filter((artwork) => artwork.source.toLowerCase() === museum.toLowerCase());
         }
+
         if (startDate || endDate) {
+            console.log('Filtering by date range:', startDate, endDate);
             allArtworks = allArtworks.filter((artwork) => {
                 const artworkDate = parseInt(artwork.date, 10);
                 if (isNaN(artworkDate)) return false;
@@ -355,6 +379,8 @@ export const getUnifiedArtworks = async (page = 1, size = 40, museum = "", start
                 return true;
             });
         }
+
+        console.log('Final unified artworks:', allArtworks);
         return allArtworks;
     } catch (error) {
         console.error('Error fetching unified artworks:', error.message);
@@ -384,7 +410,7 @@ export const getUnifiedArtworkById = async (id, source) => {
     }
 };
 
-export const searchArtworks = async (query, page = 1, size = 40) => {
+export const searchArtworks = async (query, page = 1, size = 20) => {
     try {
         const [harvardResults, rijksmuseumResults, articResults, metResults] = await Promise.all([
             searchHarvardArtworks(query, page, size),
@@ -398,4 +424,3 @@ export const searchArtworks = async (query, page = 1, size = 40) => {
         return [];
     }
 };
-
