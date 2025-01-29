@@ -12,6 +12,16 @@ const axiosInstance = axios.create({
     timeout: 30000, 
 });
 
+const fetchArtworks = async (apiFunction, label) => {
+    try {
+        console.log(`Fetching ${label} artworks...`);
+        return await apiFunction();
+    } catch (error) {
+        console.error(`${label} API error:`, error.message);
+        return [];
+    }
+};
+
 // Harvard API
 export const getHarvardArtworks = async (page = 1, size = 20) => {
     try {
@@ -330,32 +340,32 @@ const searchMetArtworks = async (query, page = 1, size = 20) => {
     }
 };
 
+// Sorting function
+const sortArtworks = (artworks, sortBy, sortOrder = "asc") => {
+    if (!sortBy || sortBy === "none") return artworks;
+
+    return [...artworks].sort((a, b) => {
+        const valueA = a[sortBy] || "";
+        const valueB = b[sortBy] || "";
+
+        if (sortBy === "date") {
+            return (parseInt(valueA) || 0) - (parseInt(valueB) || 0);
+        }
+
+        const comparison = valueA.localeCompare(valueB);
+        return sortOrder === "desc" ? -comparison : comparison;
+    });
+};
+
 // Unified Artworks
-export const getUnifiedArtworks = async (page = 1, size = 20, museum = "", startDate = "", endDate = "") => {
+export const getUnifiedArtworks = async (page = 1, size = 20, museum = "", startDate = "", endDate = "", sortBy = "none", sortOrder = "asc") => {
     try {
-        console.log('Fetching Harvard artworks...');
-        const harvardArtworks = await getHarvardArtworks(page, size).catch((error) => {
-            console.error('Harvard API error:', error.message);
-            return [];
-        });
-
-        console.log('Fetching Rijksmuseum artworks...');
-        const rijksmuseumArtworks = await getRijksmuseumArtworks(page, size).catch((error) => {
-            console.error('Rijksmuseum API error:', error.message);
-            return [];
-        });
-
-        console.log('Fetching Art Institute of Chicago artworks...');
-        const articArtworks = await getArticArtworks(page, size).catch((error) => {
-            console.error('Art Institute of Chicago API error:', error.message);
-            return [];
-        });
-
-        console.log('Fetching MET artworks...');
-        const metArtworks = await getMetArtworks(page, size).catch((error) => {
-            console.error('MET API error:', error.message);
-            return [];
-        });
+        const [harvardArtworks, rijksmuseumArtworks, articArtworks, metArtworks] = await Promise.all([
+            fetchArtworks(() => getHarvardArtworks(page, size), 'Harvard'),
+            fetchArtworks(() => getRijksmuseumArtworks(page, size), 'Rijksmuseum'),
+            fetchArtworks(() => getArticArtworks(page, size), 'Art Institute of Chicago'),
+            fetchArtworks(() => getMetArtworks(page, size), 'MET')
+        ]);
 
         let allArtworks = [...harvardArtworks, ...rijksmuseumArtworks, ...articArtworks, ...metArtworks];
 
@@ -380,13 +390,17 @@ export const getUnifiedArtworks = async (page = 1, size = 20, museum = "", start
             });
         }
 
+        if (sortBy !== "none") {
+            allArtworks = sortArtworks(allArtworks, sortBy, sortOrder);
+        }
+
         console.log('Final unified artworks:', allArtworks);
         return allArtworks;
     } catch (error) {
         console.error('Error fetching unified artworks:', error.message);
         return [];
     }
-};
+};;
 
 // Unified Artwork by ID
 export const getUnifiedArtworkById = async (id, source) => {
