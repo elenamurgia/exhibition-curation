@@ -40,7 +40,7 @@ const Homepage = () => {
         <Container >
             <div>
                 <h1 className="hero-title">Explore the World of Art</h1>
-                <img src={ManetImage} alt="Art Showcase" className="img-fluid" style={{ width: '100%', height: "auto" }}/>
+                <img src={ManetImage} alt="Art Showcase" className="img-fluid rounded-circle" style={{ width: '100%', height: "auto" }}/>
             </div>
             {loading ? (
                 <div className="loading-container">
