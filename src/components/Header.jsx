@@ -8,7 +8,7 @@ import { auth } from "../utils/firebase";
 const Header = ({ isLoading }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
-  const { user } = useAuth(); // Destructure user from useAuth
+  const { user } = useAuth();
 
   const handleSearch = (event) => {
     event.preventDefault();
@@ -28,14 +28,14 @@ const Header = ({ isLoading }) => {
   };
 
   return (
-    <Navbar bg="light" expand="lg" className="w-100" style={{ paddingLeft: "2rem", paddingRight: "2rem", marginLeft: "2rem", marginRight: "2rem", marginTop: "1rem" }}>
+    <Navbar className="w-100" style={{ backgroundColor: "#E82561", paddingLeft: "2rem", paddingRight: "2rem", marginLeft: "2rem", marginRight: "2rem", padding: "1rem" }}>
       <Container fluid>
-        <Navbar.Brand href="/" style={{ fontWeight: "bold", fontSize: "4.5rem" }}>
+        <Navbar.Brand href="/" style={{ fontWeight: "bold", fontSize: "5rem" }}>
           aRT
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
+          <Nav className="me-auto" style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
             <Nav.Link href="/artworks">Artworks</Nav.Link>
             <Nav.Link href="/dashboard">Your Exhibition</Nav.Link>
             <Nav.Link href="/register">Register</Nav.Link>
