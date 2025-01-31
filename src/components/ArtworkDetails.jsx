@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getUnifiedArtworkById } from "../utils/api"; 
-import { Spinner } from "react-bootstrap";
+import { Spinner, Button, Card, Container, Row, Col } from "react-bootstrap";
+import { useAuth } from "../hooks/useAuth";
+import { db } from "../utils/firebase";
+import { collection, query, where, getDocs, addDoc, deleteDoc, doc } from "firebase/firestore";
 
 function ArtworkDetails() {
     const { id, source } = useParams();
+    const { user } = useAuth();
     const [artwork, setArtwork] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isInExhibition, setIsInExhibition] = useState(false);
+    const [loadingAction, setLoadingAction] = useState(false);
 
     useEffect(() => {
         setIsLoading(true);
@@ -22,11 +28,66 @@ function ArtworkDetails() {
             });
     }, [id, source]);
 
+    useEffect(() => {
+        if (!user || !artwork) return;
+
+        const checkIfInExhibition = async () => {
+            const exhibitionRef = collection(db, `users/${user.uid}/exhibition`);
+            const q = query(exhibitionRef, where("id", "==", artwork.id));
+            const querySnapshot = await getDocs(q);
+            setIsInExhibition(!querySnapshot.empty);
+        };
+
+        checkIfInExhibition();
+    }, [user, artwork]);
+
+    const handleAddToExhibition = async () => {
+        if (!user || !artwork) return;
+        setLoadingAction(true);
+        try {
+            const exhibitionRef = collection(db, `users/${user.uid}/exhibition`);
+            await addDoc(exhibitionRef, {
+                id: artwork.id,
+                title: artwork.title,
+                image: artwork.image || artwork.primaryimageurl,
+                artist: artwork.artist,
+                date: artwork.date,
+                source: artwork.source,
+            });
+            setIsInExhibition(true);
+        } catch (error) {
+            console.error("Error adding artwork:", error);
+            alert("Failed to add artwork to exhibition.");
+        } finally {
+            setLoadingAction(false);
+        }
+    };
+
+    const handleRemoveFromExhibition = async () => {
+        if (!user || !artwork) return;
+        setLoadingAction(true);
+        try {
+            const exhibitionRef = collection(db, `users/${user.uid}/exhibition`);
+            const q = query(exhibitionRef, where("id", "==", artwork.id));
+            const querySnapshot = await getDocs(q);
+            const deletePromises = querySnapshot.docs.map((docSnapshot) =>
+                deleteDoc(doc(db, `users/${user.uid}/exhibition`, docSnapshot.id))
+            );
+            await Promise.all(deletePromises);
+            setIsInExhibition(false);
+        } catch (error) {
+            console.error("Error removing artwork:", error);
+            alert("Failed to remove artwork from exhibition.");
+        } finally {
+            setLoadingAction(false);
+        }
+    };
+
     if (isLoading) {
         return (
-            <div style={{ textAlign: "center", marginTop: "2rem" }}>
+            <Container className="text-center mt-4">
                 <Spinner animation="border" variant="secondary" />
-            </div>
+            </Container>
         );
     }
 
@@ -39,18 +100,11 @@ function ArtworkDetails() {
     }
 
     return (
-        <div className="row justify-content-center align-items-center">
-            <div className="card mb-3" style={{ width: "100%", height: "auto", margin: "0 auto" }}>
-                <div className="row g-0">
-                    <div className="col-md-4">
-                        <img
-                            src={artwork.image || artwork.primaryimageurl}
-                            alt={artwork.title}
-                            className="img-fluid rounded-start"
-                        />
-                    </div>
-                    <div className="col-md-8">
-                        <div className="card-body text-start">
+        <Container className="mt-4">
+            <Card className="shadow-lg">
+                <Row className="g-0">
+                    <Col md={8}>
+                        <Card.Body className="text-start">
                             <h4 className="card-title"><strong>{artwork.title}</strong></h4>
                             <p className="card-text"><strong>Artist:</strong> {artwork.artist || "Unknown Artist"}</p>
                             <p className="card-text"><strong>Date:</strong> {artwork.date || "Unknown Date"}</p>
@@ -63,11 +117,41 @@ function ArtworkDetails() {
                             <p className="card-text">
                                 <small className="text-muted">Source: {artwork.source}</small>
                             </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                            {user && (
+                                <div className="d-flex mt-3">
+                                    {isInExhibition ? (
+                                        <Button
+                                            variant="danger"
+                                            className="me-2"
+                                            onClick={handleRemoveFromExhibition}
+                                            disabled={loadingAction}
+                                        >
+                                            {loadingAction ? "Removing..." : "Remove from your Exhibition"}
+                                        </Button>
+                                    ) : (
+                                        <Button
+                                            variant="primary"
+                                            className="me-2"
+                                            onClick={handleAddToExhibition}
+                                            disabled={loadingAction}
+                                        >
+                                            {loadingAction ? "Adding..." : "Add to your Exhibition"}
+                                        </Button>
+                                    )}
+                                </div>
+                            )}
+                        </Card.Body>
+                    </Col>
+                    <Col md={4} className="d-flex align-items-center">
+                        <Card.Img
+                            src={artwork.image || artwork.primaryimageurl}
+                            alt={artwork.title}
+                            className="img-fluid rounded-end"
+                        />
+                    </Col>
+                </Row>
+            </Card>
+        </Container>
     );
 }
 

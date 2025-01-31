@@ -8,45 +8,26 @@ import ArtworkCard from "./ArtworkCard";
 
 const Dashboard = () => {
     const { user } = useAuth();
-    const [userExhibition, setUserExhibition] = useState([]);
     const [artworks, setArtworks] = useState([]);
     const [loading, setLoading] = useState(true); 
     const navigate = useNavigate();
 
     useEffect(() => {
         if (!user) return;
-
-        const fetchArtworks = async () => {
-            try {
-                const userExhibitionRef = doc(db, "exhibitions", user.uid);
-                const userDoc = await getDoc(userExhibitionRef);
-                if (userDoc.exists()) {
-                    setArtworks(userDoc.data().artworks || []);
-                }
-            } catch (error) {
-                console.error("Error fetching artworks:", error);
-            } finally {
-                setLoading(false); 
-            }
-        };
-
         fetchArtworks();
     }, [user]);
 
-    const fetchExhibition = async () => {
-        if (!user) return;
+    const fetchArtworks = async () => {
+        setLoading(true);
         try {
             const querySnapshot = await getDocs(collection(db, `users/${user.uid}/exhibition`));
-            const userArtworks = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-            setUserExhibition(userArtworks);
+            const fetchedArtworks = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            setArtworks(fetchedArtworks);
         } catch (error) {
-            console.error("Error fetching exhibition:", error);
+            console.error("Error fetching artworks:", error);
         }
+        setLoading(false);
     };
-
-    useEffect(() => {
-        fetchExhibition();
-    }, [user]);
 
     const handleLogout = async () => {
         try {
@@ -54,16 +35,6 @@ const Dashboard = () => {
             navigate("/");
         } catch (error) {
             console.error("Error logging out:", error);
-        }
-    };
-
-    const addToExhibition = async (artwork) => {
-        if (!user) return;
-        try {
-            await addDoc(collection(db, `users/${user.uid}/exhibition`), artwork);
-            fetchExhibition(); 
-        } catch (error) {
-            console.error("Error adding artwork:", error);
         }
     };
 
@@ -79,7 +50,7 @@ const Dashboard = () => {
             ) : artworks.length > 0 ? (
                 <div>
                     {artworks.map((artwork) => (
-                        <ArtworkCard key={artwork.id} {...artwork} />
+                        <ArtworkCard key={artwork.id} {...artwork} refreshArtworks={fetchArtworks} />
                     ))}
                 </div>
             ) : (

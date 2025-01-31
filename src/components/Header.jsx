@@ -28,23 +28,23 @@ const Header = ({ isLoading }) => {
   };
 
   return (
-    <Navbar className="w-100" style={{ backgroundColor: "#E82561", paddingLeft: "2rem", paddingRight: "2rem", marginLeft: "2rem", marginRight: "2rem", padding: "1rem" }}>
+    <Navbar expand="lg" className="w-100" style={{ backgroundColor: "#E82561", padding: "1rem" }}>
       <Container fluid>
-        <Navbar.Brand href="/" style={{ fontWeight: "bold", fontSize: "5rem" }}>
+        <Navbar.Brand href="/" style={{ fontWeight: "bold", fontSize: "2rem", color: "white" }}>
           aRT
         </Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto" style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
-            <Nav.Link href="/artworks">Artworks</Nav.Link>
-            <Nav.Link href="/dashboard">Your Exhibition</Nav.Link>
-            <Nav.Link href="/register">Register</Nav.Link>
+        <Navbar.Toggle aria-controls="navbar-nav" />
+        <Navbar.Collapse id="navbar-nav">
+          <Nav className="me-auto" style={{ fontWeight: "bold", fontSize: "1rem" }}>
+            <Nav.Link href="/artworks" style={{ color: "white" }}>Artworks</Nav.Link>
+            <Nav.Link href="/dashboard" style={{ color: "white" }}>Your Exhibition</Nav.Link>
+            <Nav.Link href="/register" style={{ color: "white" }}>Register</Nav.Link>
             {isLoading ? (
               <Spinner animation="border" size="sm" />
             ) : (
               user && (
                 <Nav.Item>
-                  <p style={{ margin: "0", padding: "0.5rem 1rem", color: "#555" }}>
+                  <p style={{ margin: "0", padding: "0.5rem 1rem", color: "white" }}>
                     Welcome, {user.email}
                   </p>
                 </Nav.Item>
@@ -60,13 +60,13 @@ const Header = ({ isLoading }) => {
               onChange={(e) => setSearchTerm(e.target.value)}
               aria-label="Search"
             />
-            <Button variant="outline-secondary" type="submit">
+            <Button variant="outline-light" type="submit">
               <i className="bi bi-search"></i>
             </Button>
           </Form>
           {user && (
             <Button
-              variant="outline-danger"
+              variant="outline-light"
               onClick={handleLogout}
               style={{ marginLeft: "10px" }}
             >

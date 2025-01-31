@@ -1,6 +1,5 @@
 import React from "react";
-import { Route, Routes, Navigate } from "react-router-dom";
-import { auth } from "./utils/firebase";
+import { Route, Routes } from "react-router-dom";
 import Homepage from "./components/Homepage";
 import ArtworksList from "./components/ArtworksList";
 import ArtworkDetails from "./components/ArtworkDetails";
@@ -9,13 +8,11 @@ import SearchResults from "./components/SearchResults";
 import Dashboard from "./components/Dashboard";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import PrivateRoute from "./components/PrivateRoute";
 
-const PrivateRoute = ({ children }) => {
-    return auth.currentUser ? children : <Navigate to="/login" />;
-};
 
 const App = () => (
-  <div className="row justify-content-center align-items-center" style={{ width: "100vw" }}>
+  <div className="row justify-content-center align-items-center" style={{ width: "100vw", height: "auto" }}>
     <Header />
       <Routes>
         <Route path="/" element={<Homepage />} />
