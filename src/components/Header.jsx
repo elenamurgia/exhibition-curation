@@ -38,6 +38,7 @@ const Header = ({ isLoading }) => {
           style={{
               borderColor: "#FFFFFF",
               borderWidth: "2px", 
+              backgroundColor: "#FFFFFF",
           }}
           />
         <Navbar.Collapse id="navbar-nav">

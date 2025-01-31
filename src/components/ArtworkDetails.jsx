@@ -142,8 +142,8 @@ function ArtworkDetails() {
                                     {isInExhibition ? (
                                         <Button
                                             style={{
-                                                backgroundColor: "D9B0D2",
-                                                color: "#0D0C0A",
+                                                backgroundColor: "#0D0C0A",
+                                                color: "#FFFFFF",
                                                 fontWeight: "bold",
                                                 border: "none",
                                             }}
