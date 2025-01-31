@@ -11,6 +11,7 @@ const Register = () => {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    const [formKey, setFormKey] = useState(0); 
     const navigate = useNavigate();
 
     const handleRegister = async (e) => {
@@ -38,6 +39,12 @@ const Register = () => {
                 exhibitions: [],
             });
 
+            setEmail("");
+            setPassword("");
+            setConfirmPassword("");
+
+            setFormKey((prevKey) => prevKey + 1);
+
             navigate("/dashboard");
         } catch (error) {
             switch (error.code) {
@@ -61,49 +68,74 @@ const Register = () => {
     };
 
     if (loading) {
-    return (
-      <Container className="d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
-        <Spinner animation="border" />
-      </Container>
-    );
-  }
+        return (
+            <Container className="d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
+                <Spinner animation="border" style={{ color: "#0D0C0A" }} />
+            </Container>
+        );
+    }
 
     return (
         <Container className="mt-5">
-            <h2 className="mb-4 text-center">Register</h2>
-            {error && <Alert variant="danger">{error}</Alert>}
-            <Form onSubmit={handleRegister} style={{ maxWidth: "400px", margin: "0 auto" }}>
+            <h2 className="mb-4 text-center" style={{ color: "#0D0C0A", fontWeight: "bold" }}>Register</h2>
+            {error && <Alert variant="danger" style={{ backgroundColor: "#F8D7DA", color: "#721C24", borderColor: "#F5C6CB" }}>{error}</Alert>}
+            <Form
+                onSubmit={handleRegister}
+                key={formKey} 
+                style={{ maxWidth: "400px", margin: "0 auto", backgroundColor: "#FFFFFF", padding: "20px", borderRadius: "10px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)" }}
+            >
                 <Form.Group controlId="formBasicEmail" className="mb-3">
-                    <Form.Label>Email address</Form.Label>
+                    <Form.Label style={{ color: "#0D0C0A", fontWeight: "bold" }}>Email address</Form.Label>
                     <Form.Control
                         type="email"
                         placeholder="Enter email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
+                        style={{
+                            border: "1px solid #0D0C0A",
+                            color: "#0D0C0A",
+                        }}
+                        autoComplete="off"
                     />
                 </Form.Group>
                 <Form.Group controlId="formBasicPassword" className="mb-3">
-                    <Form.Label>Password</Form.Label>
+                    <Form.Label style={{ color: "#0D0C0A", fontWeight: "bold" }}>Password</Form.Label>
                     <Form.Control
                         type="password"
                         placeholder="Enter password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
+                        style={{
+                            border: "1px solid #0D0C0A",
+                            color: "#0D0C0A",
+                        }}
+                        autoComplete="new-password" 
                     />
                 </Form.Group>
                 <Form.Group controlId="formConfirmPassword" className="mb-3">
-                    <Form.Label>Confirm Password</Form.Label>
+                    <Form.Label style={{ color: "#0D0C0A", fontWeight: "bold" }}>Confirm Password</Form.Label>
                     <Form.Control
                         type="password"
                         placeholder="Confirm password"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         required
+                        style={{
+                            border: "1px solid #0D0C0A",
+                            color: "#0D0C0A",
+                        }}
+                        autoComplete="new-password" 
                     />
                 </Form.Group>
-                <Button variant="primary" type="submit" className="w-100" disabled={loading}>
+                <Button
+                    variant="primary"
+                    type="submit"
+                    className="w-100"
+                    disabled={loading}
+                    style={{ backgroundColor: "#0D0C0A", color: "#FFFFFF", fontWeight: "bold" }}
+                >
                     {loading ? (
                         <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
                     ) : (
@@ -112,8 +144,8 @@ const Register = () => {
                 </Button>
             </Form>
             <div className="mt-3 text-center">
-                <p>
-                    Already have an account? <Link to="/login">Login</Link>
+                <p style={{ color: "#0D0C0A" }}>
+                    Already have an account? <Link to="/login" style={{ color: "#0D0C0A", textDecoration: "underline", fontWeight: "bold" }}>Login</Link>
                 </p>
             </div>
         </Container>

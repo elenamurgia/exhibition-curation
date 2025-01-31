@@ -15,8 +15,8 @@ const ArtworksList = () => {
     const [startDate, setStartDate] = useState(""); 
     const [endDate, setEndDate] = useState(""); 
     const [filterVisible, setFilterVisible] = useState(false);
-    const [sortBy, setSortBy] = useState("title"); // Default sorting by title
-    const [sortOrder, setSortOrder] = useState("asc"); // Default order is ascending
+    const [sortBy, setSortBy] = useState("title");
+    const [sortOrder, setSortOrder] = useState("asc"); 
 
     useEffect(() => {
         const fetchArtworks = async () => {
@@ -78,11 +78,16 @@ const ArtworksList = () => {
 
     return (
         <Container>
-            <h2 className="mb-4">Artworks</h2>
+            <h2 className="mb-4" style={{ fontWeight: "bold", fontSize: "3rem",  color: "#0D0C0A", paddingTop: "1rem"}}>Artworks</h2>
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <Dropdown className="me-2">
-                    <Dropdown.Toggle variant="outline-secondary">
-                        {sortBy !== "none" ? `Sort by: ${sortBy.charAt(0).toUpperCase() + sortBy.slice(1)}` : "Sort by"}
+                    <Dropdown.Toggle style={{ 
+                        backgroundColor: "#0D0C0A",  
+                        fontWeight: "bold", 
+                        fontSize: "1rem", 
+                        border: "none" 
+                    }}>
+                        <FaSort /> {sortBy !== "none" ? `Sort by: ${sortBy.charAt(0).toUpperCase() + sortBy.slice(1)}` : "Sort by"}
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
                         <Dropdown.Item onClick={() => handleSortChange("none", "asc")}>No Sorting</Dropdown.Item>
@@ -94,8 +99,18 @@ const ArtworksList = () => {
                         <Dropdown.Item onClick={() => handleSortChange("date", "desc")}>Date (2025-0)</Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
-                <Button variant="outline-secondary" onClick={() => setFilterVisible(!filterVisible)}>
-                    <FaFilter /> {filterVisible ? "Hide Filters" : "Show Filters"}
+                <Button 
+                    variant="outline-secondary" 
+                    onClick={() => setFilterVisible(!filterVisible)}
+                    style={{
+                        backgroundColor: "#0D0C0A",
+                        color: "#FFFFFF",  
+                        fontWeight: "bold", 
+                        fontSize: "1rem", 
+                        border: "none"
+                    }}
+                >
+                        <FaFilter /> {filterVisible ? "Hide Filters" : "Show Filters"}
                 </Button>
             </div>
             <Collapse in={filterVisible}>
@@ -107,7 +122,21 @@ const ArtworksList = () => {
                         startDate={startDate}
                         endDate={endDate}
                     />
-                    <Button variant="outline-secondary" onClick={resetFilters}>Reset Filters</Button>
+                    <Button 
+                        variant="outline-secondary" 
+                        className="d-flex justify-content-end mt-3"
+                        onClick={resetFilters} 
+                        style={{
+                            backgroundColor: "#0D0C0A", 
+                            color: "#FFFFFF", 
+                            marginBottom: "0.5rem", 
+                            marginLeft: "auto", 
+                            fontWeight: "bold", 
+                            fontSize: "1rem", 
+                        }}
+                    >
+                        Reset Filters
+                    </Button>
                 </div>
             </Collapse>
             {error ? (
@@ -127,12 +156,21 @@ const ArtworksList = () => {
                 </Row>
                 <div className="d-flex justify-content-between mt-3">
                     {page > 1 && (
-                        <Button onClick={() => setPage((prev) => Math.max(prev - 1, 1))} variant="secondary">
+                        <Button 
+                            onClick={() => setPage((prev) => Math.max(prev - 1, 1))} 
+                            variant="secondary"
+                            style={{backgroundColor: "#0D0C0A", color: "#FFFFFF"}}
+                        >
                             Previous
                         </Button>
                     )}
                     {filteredArtworks.length > 0 && (
-                        <Button onClick={() => setPage((prev) => prev + 1)} variant="secondary" className="ms-auto">
+                        <Button 
+                        onClick={() => setPage((prev) => prev + 1)} 
+                        variant="secondary" 
+                        className="ms-auto"
+                        style={{backgroundColor: "#0D0C0A", color: "#FFFFFF"}}
+                        >
                             Next
                         </Button>
                     )}

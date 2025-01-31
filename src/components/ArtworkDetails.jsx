@@ -86,42 +86,67 @@ function ArtworkDetails() {
     if (isLoading) {
         return (
             <Container className="text-center mt-4">
-                <Spinner animation="border" variant="secondary" />
+                <Spinner animation="border" style={{ color: "D9B0D2" }} />
             </Container>
         );
     }
 
     if (error) {
-        return <p style={{ color: "red", textAlign: "center" }}>{error}</p>;
+        return <p style={{ color: "D9B0D2", textAlign: "center" }}>{error}</p>;
     }
 
     if (!artwork) {
-        return <p style={{ textAlign: "center" }}>Artwork not found.</p>;
+        return <p style={{ textAlign: "center", color: "D9B0D2"}}>Artwork not found.</p>;
     }
 
     return (
         <Container className="mt-4">
-            <Card className="shadow-lg">
+            <Card
+                className="shadow-lg"
+                style={{
+                    border: "none",
+                    borderRadius: "15px",
+                    overflow: "hidden",
+                    backgroundColor: "#FFFFFF", 
+                }}
+            >
                 <Row className="g-0">
                     <Col md={8}>
-                        <Card.Body className="text-start">
-                            <h4 className="card-title"><strong>{artwork.title}</strong></h4>
-                            <p className="card-text"><strong>Artist:</strong> {artwork.artist || "Unknown Artist"}</p>
-                            <p className="card-text"><strong>Date:</strong> {artwork.date || "Unknown Date"}</p>
-                            <p className="card-text"><strong>Medium:</strong> {artwork.medium || "Not specified"}</p>
-                            <p className="card-text"><strong>Dimensions:</strong> {artwork.dimensions || "Not specified"}</p>
-                            <p className="card-text"><strong>Culture:</strong> {artwork.culture || "Unknown"}</p>
+                        <Card.Body className="text-start" style={{ color: "#0D0C0A", padding: "2rem" }}>
+                            <h4 className="card-title" style={{ fontWeight: "bold", marginBottom: "1rem" }}>
+                                {artwork.title}
+                            </h4>
+                            <p className="card-text">
+                                <strong>Artist:</strong> {artwork.artist || "Unknown Artist"}
+                            </p>
+                            <p className="card-text">
+                                <strong>Date:</strong> {artwork.date || "Unknown Date"}
+                            </p>
+                            <p className="card-text">
+                                <strong>Medium:</strong> {artwork.medium || "Not specified"}
+                            </p>
+                            <p className="card-text">
+                                <strong>Dimensions:</strong> {artwork.dimensions || "Not specified"}
+                            </p>
+                            <p className="card-text">
+                                <strong>Culture:</strong> {artwork.culture || "Unknown"}
+                            </p>
                             <p className="card-text">
                                 <strong>Description:</strong> {artwork.description || "No description available"}
                             </p>
                             <p className="card-text">
-                                <small className="text-muted">Source: {artwork.source}</small>
+                                <small>Source: {artwork.source}</small>
                             </p>
                             {user && (
                                 <div className="d-flex mt-3">
                                     {isInExhibition ? (
                                         <Button
-                                            variant="danger"
+                                            style={{
+                                                backgroundColor: "D9B0D2",
+                                                color: "#0D0C0A",
+                                                fontWeight: "bold",
+                                                border: "none",
+                                            }}
                                             className="me-2"
                                             onClick={handleRemoveFromExhibition}
                                             disabled={loadingAction}
@@ -130,7 +155,12 @@ function ArtworkDetails() {
                                         </Button>
                                     ) : (
                                         <Button
-                                            variant="primary"
+                                            style={{
+                                                backgroundColor: "#0D0C0A",
+                                                color: "#FFFFFF",
+                                                fontWeight: "bold",
+                                                border: "none",
+                                            }}
                                             className="me-2"
                                             onClick={handleAddToExhibition}
                                             disabled={loadingAction}
@@ -146,7 +176,10 @@ function ArtworkDetails() {
                         <Card.Img
                             src={artwork.image || artwork.primaryimageurl}
                             alt={artwork.title}
-                            className="img-fluid rounded-end"
+                            className="img-fluid"
+                            style={{
+                                borderRadius: "0 15px 15px 0",
+                            }}
                         />
                     </Col>
                 </Row>

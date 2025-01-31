@@ -28,23 +28,29 @@ const Header = ({ isLoading }) => {
   };
 
   return (
-    <Navbar expand="lg" className="w-100" style={{ backgroundColor: "#E82561", padding: "1rem" }}>
+    <Navbar expand="lg" className="w-100" style={{ backgroundColor: "#0D0C0A", padding: "1rem" }}>
       <Container fluid>
-        <Navbar.Brand href="/" style={{ fontWeight: "bold", fontSize: "2rem", color: "white" }}>
+        <Navbar.Brand href="/" style={{ fontWeight: "bold", fontSize: "3rem", color: "#FFFFFF" }}>
           aRT
         </Navbar.Brand>
-        <Navbar.Toggle aria-controls="navbar-nav" />
+        <Navbar.Toggle 
+          aria-controls="basic-navbar-nav" 
+          style={{
+              borderColor: "#FFFFFF",
+              borderWidth: "2px", 
+          }}
+          />
         <Navbar.Collapse id="navbar-nav">
           <Nav className="me-auto" style={{ fontWeight: "bold", fontSize: "1rem" }}>
-            <Nav.Link href="/artworks" style={{ color: "white" }}>Artworks</Nav.Link>
-            <Nav.Link href="/dashboard" style={{ color: "white" }}>Your Exhibition</Nav.Link>
-            <Nav.Link href="/register" style={{ color: "white" }}>Register</Nav.Link>
+            <Nav.Link href="/artworks" style={{ color: "#FFFFFF" }}>Artworks</Nav.Link>
+            <Nav.Link href="/dashboard" style={{ color: "#FFFFFF" }}>Your Exhibition</Nav.Link>
+            <Nav.Link href="/login" style={{ color: "#FFFFFF" }}>Login</Nav.Link>
             {isLoading ? (
-              <Spinner animation="border" size="sm" />
+              <Spinner animation="border" size="sm" style={{ width: '4rem', height: '4rem', colour: "#D9B0D2" }} />
             ) : (
               user && (
                 <Nav.Item>
-                  <p style={{ margin: "0", padding: "0.5rem 1rem", color: "white" }}>
+                  <p style={{ margin: "0", padding: "0.5rem 1rem", color: "#FFFFFF" }}>
                     Welcome, {user.email}
                   </p>
                 </Nav.Item>
@@ -61,7 +67,7 @@ const Header = ({ isLoading }) => {
               aria-label="Search"
             />
             <Button variant="outline-light" type="submit">
-              <i className="bi bi-search"></i>
+              <i className="bi bi-search" style={{fontWeight: "bold", fontSize: "1rem"}}></i>
             </Button>
           </Form>
           {user && (

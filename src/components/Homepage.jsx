@@ -39,25 +39,31 @@ const Homepage = () => {
     return (
         <Container >
             <div>
-                <h1 className="hero-title">Explore the World of Art</h1>
+                <h1 className="display-4 d-sm-none d-md-block" style={{fontWeight: "bold", color: "#0D0C0A"}}>Explore the World of Art</h1>
                 <img src={ManetImage} alt="Art Showcase" className="img-fluid rounded-circle" style={{ width: '100%', height: "auto" }}/>
+                <h5 className="display-6 d-sm-none d-md-block" style={{fontWeight: "bold", color: "#0D0C0A"}}>Create your Exhibition</h5>
             </div>
             {loading ? (
-                <div className="loading-container">
-                    <Spinner animation="border" style={{ width: '4rem', height: '4rem' }} />
-                    <p className="loading-text">Loading...</p>
+                <div>
+                    <Spinner animation="border" style={{ width: '4rem', height: '4rem', color: "#0D0C0A" }} />
+                    <p className="loading-text" style={{fontSize: "1.5rem", color: "#0D0C0A"}}>Loading...</p>
                 </div>
             ) : (
                 <>
                     <div className="carousel-container">
                         <Row className="justify-content-between align-items-center">
-                            <Col xs="auto">
-                                <h2 className="carousel-title">Featured Artworks</h2>
-                            </Col>
-                            <Col xs="auto">
+                            <Col xs="auto" className="ms-auto d-flex justify-content-end">
                                 <Button
                                     type="button"
-                                    className="btn btn-secondary"
+                                    className="btn text-#0D0C0A btn-sm btn-md px-3 px-md-4 py-1 py-md-2 fs-7 fs-md-6"
+                                    style={{
+                                        backgroundColor: "#0D0C0A",
+                                        color: "#FFFFFF",            
+                                        fontWeight: "bold",        
+                                        fontSize: "1rem",      
+                                        border: "none", 
+                                        margin: "0.5rem",          
+                                    }}
                                     onClick={handleViewMore}
                                 >
                                     View All
