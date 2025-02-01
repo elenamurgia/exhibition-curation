@@ -40,14 +40,12 @@ const Register = () => {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
 
-            // Save user info in Firestore
             await setDoc(doc(db, "users", user.uid), {
-                name, // Add name to Firestore
+                name, 
                 email: user.email,
                 exhibitions: [],
             });
-
-            // Clear form fields
+            
             setName("");
             setEmail("");
             setPassword("");

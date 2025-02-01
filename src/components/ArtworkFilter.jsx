@@ -29,8 +29,8 @@ const ArtworkFilter = ({ onFilterChange, onDateFilterChange, selectedMuseum, sta
                     value={selectedMuseum}
                     onChange={handleMuseumChange}
                     style={{
-                        color: "#0D0C0A", /* Black text for user input */
-                        backgroundColor: "#FFFFFF", /* White background */
+                        color: "#0D0C0A", 
+                        backgroundColor: "#FFFFFF", 
                         border: "1px solid #0D0C0A",
                         fontWeight: "bold",
                     }}
@@ -39,7 +39,6 @@ const ArtworkFilter = ({ onFilterChange, onDateFilterChange, selectedMuseum, sta
                     <option value="Harvard Art Museums">Harvard Art Museums</option>
                     <option value="Rijksmuseum">Rijksmuseum</option>
                     <option value="Art Institute of Chicago">Art Institute of Chicago</option>
-                    <option value="MET Museum">MET Museum</option>
                 </Form.Control>
             </Form.Group>
             <Form.Group className="mt-3">
@@ -51,12 +50,12 @@ const ArtworkFilter = ({ onFilterChange, onDateFilterChange, selectedMuseum, sta
                         value={startDate}
                         onChange={handleStartDateChange}
                         style={{
-                            color: "#0D0C0A", /* Black text for user input */
-                            backgroundColor: "#FFFFFF", /* White background */
+                            color: "#0D0C0A", 
+                            backgroundColor: "#FFFFFF", 
                             border: "1px solid #0D0C0A",
                             fontWeight: "bold",
                         }}
-                        className="custom-placeholder" /* Add a class for placeholder styling */
+                        className="custom-placeholder" 
                     />
                     <span className="mx-2" style={{ color: "#0D0C0A", fontWeight: "bold" }}>to</span>
                     <Form.Control
@@ -65,12 +64,12 @@ const ArtworkFilter = ({ onFilterChange, onDateFilterChange, selectedMuseum, sta
                         value={endDate}
                         onChange={handleEndDateChange}
                         style={{
-                            color: "#0D0C0A", /* Black text for user input */
-                            backgroundColor: "#FFFFFF", /* White background */
+                            color: "#0D0C0A", 
+                            backgroundColor: "#FFFFFF",
                             border: "1px solid #0D0C0A",
                             fontWeight: "bold",
                         }}
-                        className="custom-placeholder" /* Add a class for placeholder styling */
+                        className="custom-placeholder" 
                     />
                 </div>
             </Form.Group>
