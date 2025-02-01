@@ -38,10 +38,30 @@ const Homepage = () => {
 
     return (
         <Container >
-            <div>
-                <h1 className="display-4 d-sm-none d-md-block" style={{fontWeight: "bold", color: "#0D0C0A"}}>Explore the World of Art</h1>
-                <img src={ManetImage} alt="Art Showcase" className="img-fluid rounded-circle" style={{ width: '100%', height: "auto" }}/>
-                <h5 className="display-6 d-sm-none d-md-block" style={{fontWeight: "bold", color: "#0D0C0A"}}>Create your Exhibition</h5>
+            <div style={{ position: 'relative', textAlign: 'center' }}>
+                <img 
+                    src={ManetImage} 
+                    alt="Art Showcase" 
+                    className="img-fluid" 
+                    style={{ width: '100%', height: 'auto', margin: "0", padding: "0" }}
+                />
+                <div 
+                    style={{
+                        position: 'absolute',
+                        top: '80%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        color: '#FFFFFF', 
+                        textShadow: '1px 1px 4px rgba(0, 0, 0, 0.7)' 
+                    }}
+                >
+                    <h1 style={{ fontWeight: 'bold', marginBottom: '0.5rem', color: '#FFFFFF' }}>
+                        Welcome to aRT
+                    </h1>
+                </div>
+                    <h3 style={{ fontWeight: 'bold', color: "#0D0C0A" }}>
+                        Choose your favourite artworks and create your exhibition
+                    </h3>
             </div>
             {loading ? (
                 <div>

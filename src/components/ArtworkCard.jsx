@@ -25,9 +25,12 @@ const ArtworkCard = ({ id, title, image, artist, date, source }) => {
                 variant="top" 
                 src={image} 
                 alt={title} 
+                className="img-fluid"
                 style={{
                     borderTopLeftRadius: '15px', 
                     borderTopRightRadius: '15px',
+                    width: '100%',
+                    height: 'auto'
                 }}
             />
             <Card.Body style={{ textAlign: 'center', padding: '1.5rem' }}>

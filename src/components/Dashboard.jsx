@@ -13,7 +13,7 @@ const Dashboard = () => {
     const { user } = useAuth();
     const [artworks, setArtworks] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [viewMode, setViewMode] = useState("grid"); // Default view is grid
+    const [viewMode, setViewMode] = useState("grid"); 
     const navigate = useNavigate();
 
     useEffect(() => {
