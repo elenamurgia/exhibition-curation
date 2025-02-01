@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Form, FormControl, Button, Navbar, Nav, Container, Spinner } from "react-bootstrap";
+import { Form, FormControl, Button, Navbar, Nav, Container, Spinner, Dropdown } from "react-bootstrap";
 import { useAuth } from "../hooks/useAuth";
 import { signOut } from "firebase/auth";
 import { auth } from "../utils/firebase";
+import { FaUserCircle } from "react-icons/fa";
 
 const Header = ({ isLoading }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -21,7 +22,7 @@ const Header = ({ isLoading }) => {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      navigate("/register");
+      navigate("/");
     } catch (error) {
       console.error("Error logging out:", error);
     }
@@ -33,29 +34,85 @@ const Header = ({ isLoading }) => {
         <Navbar.Brand href="/" style={{ fontWeight: "bold", fontSize: "3rem", color: "#FFFFFF" }}>
           aRT
         </Navbar.Brand>
-        <Navbar.Toggle 
-          aria-controls="basic-navbar-nav" 
+        <Navbar.Toggle
+          aria-controls="basic-navbar-nav"
           style={{
-              borderColor: "#FFFFFF",
-              borderWidth: "2px", 
-              backgroundColor: "#FFFFFF",
+            borderColor: "#FFFFFF",
+            borderWidth: "2px",
+            backgroundColor: "#FFFFFF",
           }}
-          />
+        />
         <Navbar.Collapse id="navbar-nav">
-          <Nav className="me-auto" style={{ fontWeight: "bold", fontSize: "1rem" }}>
-            <Nav.Link href="/artworks" style={{ color: "#FFFFFF" }}>Artworks</Nav.Link>
-            <Nav.Link href="/dashboard" style={{ color: "#FFFFFF" }}>Your Exhibition</Nav.Link>
-            <Nav.Link href="/login" style={{ color: "#FFFFFF" }}>Login</Nav.Link>
+          <Nav
+            className="me-auto d-flex align-items-center"
+            style={{
+              fontWeight: "bold",
+              fontSize: "1rem",
+              gap: "1.5rem", 
+            }}
+          >
+            <Nav.Link href="/artworks" style={{ color: "#FFFFFF" }}>
+              Artworks
+            </Nav.Link>
+            <Nav.Link href="/dashboard" style={{ color: "#FFFFFF" }}>
+              Your Exhibition
+            </Nav.Link>
             {isLoading ? (
-              <Spinner animation="border" size="sm" style={{ width: '4rem', height: '4rem', colour: "#D9B0D2" }} />
+              <Spinner
+                animation="border"
+                size="sm"
+                style={{
+                  width: "1.5rem",
+                  height: "1.5rem",
+                  color: "#D9B0D2",
+                  marginLeft: "1rem",
+                  display: "inline-block",
+                  verticalAlign: "middle",
+                }}
+              />
+            ) : user ? (
+              <Dropdown align="end">
+                <Dropdown.Toggle
+                  variant="link"
+                  id="dropdown-user"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    color: "#FFFFFF",
+                    fontWeight: "bold",
+                    gap: "0.5rem",
+                    textDecoration: "none",
+                    padding: 0,
+                    border: "none",
+                  }}
+                >
+                  {user.displayName?.toUpperCase() || user.email.split("@")[0].toUpperCase()}
+                  <FaUserCircle size={20} />
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item onClick={() => navigate("/dashboard")}>
+                    Your Exhibition
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={handleLogout}>Log Out</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             ) : (
-              user && (
-                <Nav.Item>
-                  <p style={{ margin: "0", padding: "0.5rem 1rem", color: "#FFFFFF" }}>
-                    Welcome, {user.email}
-                  </p>
-                </Nav.Item>
-              )
+              <Button
+                variant="link"
+                onClick={() => navigate("/login")}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                  color: "#FFFFFF",
+                  fontWeight: "bold",
+                  textDecoration: "none",
+                  padding: 0,
+                  border: "none",
+                }}
+              >
+                Log In <FaUserCircle size={20} />
+              </Button>
             )}
           </Nav>
           <Form className="d-flex" onSubmit={handleSearch}>
@@ -68,18 +125,9 @@ const Header = ({ isLoading }) => {
               aria-label="Search"
             />
             <Button variant="outline-light" type="submit">
-              <i className="bi bi-search" style={{fontWeight: "bold", fontSize: "1rem"}}></i>
+              <i className="bi bi-search" style={{ fontWeight: "bold", fontSize: "1rem" }}></i>
             </Button>
           </Form>
-          {user && (
-            <Button
-              variant="outline-light"
-              onClick={handleLogout}
-              style={{ marginLeft: "10px" }}
-            >
-              Logout
-            </Button>
-          )}
         </Navbar.Collapse>
       </Container>
     </Navbar>
