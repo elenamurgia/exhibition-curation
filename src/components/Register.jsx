@@ -6,6 +6,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { Form, Button, Container, Alert, Spinner } from "react-bootstrap";
 
 const Register = () => {
+    const [name, setName] = useState(""); 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -28,17 +29,26 @@ const Register = () => {
             return;
         }
 
+        if (!name.trim()) {
+            setError("Name is required.");
+            return;
+        }
+
         setLoading(true);
 
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
 
+            // Save user info in Firestore
             await setDoc(doc(db, "users", user.uid), {
+                name, // Add name to Firestore
                 email: user.email,
                 exhibitions: [],
             });
 
+            // Clear form fields
+            setName("");
             setEmail("");
             setPassword("");
             setConfirmPassword("");
@@ -81,9 +91,24 @@ const Register = () => {
             {error && <Alert variant="danger" style={{ backgroundColor: "#F8D7DA", color: "#721C24", borderColor: "#F5C6CB" }}>{error}</Alert>}
             <Form
                 onSubmit={handleRegister}
-                key={formKey} 
+                key={formKey}
                 style={{ maxWidth: "400px", margin: "0 auto", backgroundColor: "#FFFFFF", padding: "20px", borderRadius: "10px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)" }}
             >
+                <Form.Group controlId="formBasicName" className="mb-3">
+                    <Form.Label style={{ color: "#0D0C0A", fontWeight: "bold" }}>Name</Form.Label>
+                    <Form.Control
+                        type="text"
+                        placeholder="Enter your name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                        style={{
+                            border: "1px solid #0D0C0A",
+                            color: "#0D0C0A",
+                        }}
+                        autoComplete="off"
+                    />
+                </Form.Group>
                 <Form.Group controlId="formBasicEmail" className="mb-3">
                     <Form.Label style={{ color: "#0D0C0A", fontWeight: "bold" }}>Email address</Form.Label>
                     <Form.Control
