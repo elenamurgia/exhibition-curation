@@ -86,7 +86,7 @@ const Header = ({ isLoading }) => {
                     border: "none",
                   }}
                 >
-                  {user.displayName?.toUpperCase() || user.email.split("@")[0].toUpperCase()}
+                  {user.displayName || user.email.split("@")[0]}
                   <FaUserCircle size={20} />
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
