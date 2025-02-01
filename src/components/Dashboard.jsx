@@ -121,7 +121,22 @@ const Dashboard = () => {
                     </div>
                 )
             ) : (
-                <p className="text-center">No artworks in your exhibition yet.</p>
+                <div className="text-center mt-4">
+    <p>No artworks in your exhibition yet.</p>
+    <p>
+        <Button 
+            variant="link" 
+            onClick={() => navigate("/artworks")} 
+            style={{
+                textDecoration: "underline",
+                color: "#0D0C0A",
+                fontWeight: "bold",
+            }}
+        >
+            Search for artworks here
+        </Button>
+    </p>
+</div>
             )}
         </Container>
     );
