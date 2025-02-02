@@ -31,7 +31,7 @@ const Header = ({ isLoading }) => {
   return (
     <Navbar expand="lg" className="w-100" style={{ backgroundColor: "#0D0C0A", padding: "1rem" }}>
       <Container fluid>
-        <Navbar.Brand href="/" style={{ fontWeight: "bold", fontSize: "3rem", color: "#FFFFFF" }}>
+        <Navbar.Brand href="/" style={{ fontWeight: "bold", fontSize: "4rem", color: "#FFFFFF" }}>
           aRT
         </Navbar.Brand>
         <Navbar.Toggle
@@ -47,7 +47,7 @@ const Header = ({ isLoading }) => {
             className="me-auto d-flex align-items-center"
             style={{
               fontWeight: "bold",
-              fontSize: "1rem",
+              fontSize: "1.5rem",
               gap: "1.5rem", 
             }}
           >
@@ -83,6 +83,7 @@ const Header = ({ isLoading }) => {
                     alignItems: "center",
                     color: "#FFFFFF",
                     fontWeight: "bold",
+                    fontSize: "1.5rem",
                     gap: "0.5rem",
                     textDecoration: "none",
                     padding: 0,
@@ -109,12 +110,13 @@ const Header = ({ isLoading }) => {
                   gap: "0.5rem",
                   color: "#FFFFFF",
                   fontWeight: "bold",
+                  fontSize: "1.5rem",
                   textDecoration: "none",
                   padding: 0,
                   border: "none",
                 }}
               >
-                Log In <FaUserCircle size={20} />
+                Log In <FaUserCircle size={30} />
               </Button>
             )}
           </Nav>
@@ -128,7 +130,7 @@ const Header = ({ isLoading }) => {
               aria-label="Search"
             />
             <Button variant="outline-light" type="submit">
-              <i className="bi bi-search" style={{ fontWeight: "bold", fontSize: "1rem" }}></i>
+              <i className="bi bi-search" style={{ fontWeight: "bold", fontSize: "1.5rem" }}></i>
             </Button>
           </Form>
         </Navbar.Collapse>
