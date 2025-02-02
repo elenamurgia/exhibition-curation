@@ -10,6 +10,7 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import PrivateRoute from "./components/PrivateRoute";
 import Footer from "./components/Footer";
+import About from "./components/About";
 
 const App = () => (
   <div style={{
@@ -30,6 +31,7 @@ const App = () => (
     }}> 
       <Routes>
         <Route path="/" element={<Homepage />} />
+        <Route path="/about" element={<About />} />
         <Route path="/search/:searchTerm" element={<SearchResults />} />
         <Route path="/artworks" element={<ArtworksList />} />
         <Route path="/artworks/:source/:id" element={<ArtworkDetails />} />

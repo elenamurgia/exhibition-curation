@@ -51,6 +51,9 @@ const Header = ({ isLoading }) => {
               gap: "1.5rem", 
             }}
           >
+            <Nav.Link href="/about" style={{ color: "#FFFFFF" }}>
+              About
+            </Nav.Link>
             <Nav.Link href="/artworks" style={{ color: "#FFFFFF" }}>
               Artworks
             </Nav.Link>
