@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Spinner, Button, Row, Col, Collapse, Alert, Dropdown } from 'react-bootstrap';
+import { Container, Spinner, Button, Row, Col, Collapse, Dropdown } from 'react-bootstrap';
 import { getUnifiedArtworks } from '../utils/api';
 import ArtworkCard from './ArtworkCard';
 import ArtworkFilter from './ArtworkFilter';
@@ -23,14 +23,16 @@ const ArtworksList = () => {
             setLoading(true);
             setError(false);
             try {
-                console.log('Fetching artworks...');
                 const data = await getUnifiedArtworks(page, 20, selectedMuseum, startDate, endDate, sortBy, sortOrder);
-                console.log('Fetched artworks:', data);
-                setArtworks(data);
-                setFilteredArtworks(data);
+                if (data.length === 0) {
+                    setError("No artworks found matching your criteria. Please adjust your filters and try again.");
+                } else {
+                    setArtworks(data);
+                    applyFilters(data); 
+                }
             } catch (error) {
-                console.error('Failed to fetch artworks', error);
-                setError(true);
+                console.error("Failed to fetch artworks", error);
+                setError("Error fetching artworks. Please check your internet connection and try again.");
             } finally {
                 setLoading(false);
             }
@@ -38,14 +40,31 @@ const ArtworksList = () => {
         fetchArtworks();
     }, [page, selectedMuseum, startDate, endDate, sortBy, sortOrder]);
 
-    const handleMuseumFilter = (selectedMuseum) => {
-        setSelectedMuseum(selectedMuseum); 
+    const applyFilters = (data) => {
+        let filtered = data;
+
+        if (selectedMuseum) {
+            filtered = filtered.filter(artwork => artwork.source === selectedMuseum);
+        }
+
+        if (startDate && endDate) {
+            filtered = filtered.filter(artwork => {
+                const artworkDate = parseInt(artwork.date);
+                return artworkDate >= parseInt(startDate) && artworkDate <= parseInt(endDate);
+            });
+        }
+
+        setFilteredArtworks(filtered);
+    };
+
+    const handleMuseumFilter = (museum) => {
+        setSelectedMuseum(museum); 
         setPage(1); 
     };
 
-    const handleDateFilter = (startDate, endDate) => {
-        setStartDate(startDate); 
-        setEndDate(endDate); 
+    const handleDateFilter = (start, end) => {
+        setStartDate(start); 
+        setEndDate(end); 
         setPage(1); 
     };
 
@@ -64,7 +83,7 @@ const ArtworksList = () => {
 
     useEffect(() => {
         if (sortBy !== "none") {
-            const sortedData = [...artworks].sort((a, b) => {
+            const sortedData = [...filteredArtworks].sort((a, b) => {
                 if (!a[sortBy] || !b[sortBy]) return 0;
                 if (sortBy === 'date') return (parseInt(a.date) || 0) - (parseInt(b.date) || 0);
                 return a[sortBy].localeCompare(b[sortBy]);
@@ -74,10 +93,10 @@ const ArtworksList = () => {
         } else {
             setFilteredArtworks(artworks);
         }
-    }, [artworks, sortBy, sortOrder]);
+    }, [sortBy, sortOrder]);
 
     return (
-        <Container>
+        <Container fluid style={{ width: "100%", padding: "0", margin: "0" }}>
             <h2 className="mb-4" style={{ fontWeight: "bold", fontSize: "3rem",  color: "#0D0C0A", paddingTop: "1rem"}}>Artworks</h2>
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <Dropdown className="me-2">
@@ -140,11 +159,9 @@ const ArtworksList = () => {
                 </div>
             </Collapse>
             {error ? (
-                <Alert variant="danger" className="mt-3">
-                    There was a problem fetching artworks {selectedMuseum && `for ${selectedMuseum}`}. Please try again later or select another museum.
-                </Alert>
+                <p className="text-center mt-3">{error}</p>
             ) : loading ? (
-                <Spinner animation="border" />
+                    <Spinner animation="border" style={{ width: '4rem', height: '4rem', color: "#0D0C0A" }} />
             ) : filteredArtworks.length > 0 ? (
                 <>
                 <Row className="artwork-grid">
@@ -177,7 +194,7 @@ const ArtworksList = () => {
                 </div>
                 </>
             ) : (
-                <p>No artworks found matching your criteria. Please try again later</p>
+                <p className="text-center mt-4">No artworks found matching your criteria. Please try again later</p>
             )}
         </Container>
     );

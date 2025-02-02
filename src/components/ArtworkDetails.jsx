@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { getUnifiedArtworkById } from "../utils/api"; 
-import { Spinner, Button, Card, Container, Row, Col } from "react-bootstrap";
+import { Spinner, Button, Card, Container, Row, Col, Alert } from "react-bootstrap";
 import { useAuth } from "../hooks/useAuth";
 import { db } from "../utils/firebase";
 import { collection, query, where, getDocs, addDoc, deleteDoc, doc } from "firebase/firestore";
@@ -9,6 +9,7 @@ import { collection, query, where, getDocs, addDoc, deleteDoc, doc } from "fireb
 function ArtworkDetails() {
     const { id, source } = useParams();
     const { user } = useAuth();
+    const navigate = useNavigate();
     const [artwork, setArtwork] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -19,11 +20,15 @@ function ArtworkDetails() {
         setIsLoading(true);
         getUnifiedArtworkById(id, source)
             .then((data) => {
+                if (!data) {
+                    setError("Artwork not found. It may have been removed or is unavailable.");
+                }
                 setArtwork(data || null);
-                setIsLoading(false);
             })
             .catch(() => {
-                setError("Failed to fetch artwork details. Please try again.");
+                setError("Failed to fetch artwork details. Please check your internet connection and try again.");
+            })
+            .finally(() => {
                 setIsLoading(false);
             });
     }, [id, source]);
@@ -32,14 +37,22 @@ function ArtworkDetails() {
         if (!user || !artwork) return;
 
         const checkIfInExhibition = async () => {
-            const exhibitionRef = collection(db, `users/${user.uid}/exhibition`);
-            const q = query(exhibitionRef, where("id", "==", artwork.id));
-            const querySnapshot = await getDocs(q);
-            setIsInExhibition(!querySnapshot.empty);
+            try {
+                const exhibitionRef = collection(db, `users/${user.uid}/exhibition`);
+                const q = query(exhibitionRef, where("id", "==", artwork.id));
+                const querySnapshot = await getDocs(q);
+                setIsInExhibition(!querySnapshot.empty);
+            } catch (error) {
+                console.error("Error checking exhibition status:", error);
+            }
         };
 
         checkIfInExhibition();
     }, [user, artwork]);
+
+    const handleLoginRedirect = () => {
+        navigate("/login");
+    };
 
     const handleAddToExhibition = async () => {
         if (!user || !artwork) return;
@@ -86,13 +99,19 @@ function ArtworkDetails() {
     if (isLoading) {
         return (
             <Container className="text-center mt-4">
-                <Spinner animation="border" style={{ color: "D9B0D2" }} />
+                <Spinner animation="border" style={{ width: '4rem', height: '4rem', color: "#0D0C0A" }} />
+                <p className="loading-text" style={{fontSize: "1.5rem", color: "#0D0C0A"}}>Loading...</p>
             </Container>
         );
     }
 
     if (error) {
-        return <p style={{ color: "D9B0D2", textAlign: "center" }}>{error}</p>;
+        return (
+            <Container className="text-center mt-4">
+                <Alert variant="danger">{error}</Alert>
+                <Button variant="dark" onClick={() => window.location.reload()}>Retry</Button>
+            </Container>
+        );
     }
 
     if (!artwork) {
@@ -100,14 +119,14 @@ function ArtworkDetails() {
     }
 
     return (
-        <Container className="mt-4">
+        <Container fluid style={{ width: "100%", padding: "0", margin: "0" }}>
             <Card
                 className="shadow-lg"
                 style={{
                     border: "none",
                     borderRadius: "15px",
                     overflow: "hidden",
-                    backgroundColor: "#FFFFFF", 
+                    backgroundColor: "#FFFFFF",
                 }}
             >
                 <Row className="g-0">
@@ -137,7 +156,7 @@ function ArtworkDetails() {
                             <p className="card-text">
                                 <small>Source: {artwork.source}</small>
                             </p>
-                            {user && (
+                            {user ? (
                                 <div className="d-flex mt-3">
                                     {isInExhibition ? (
                                         <Button
@@ -169,6 +188,14 @@ function ArtworkDetails() {
                                         </Button>
                                     )}
                                 </div>
+                            ) : (
+                                <Button
+                                    style={{ backgroundColor: "#0D0C0A", color: "#FFFFFF", fontWeight: "bold", border: "none" }}
+                                    className="me-2"
+                                    onClick={handleLoginRedirect}
+                                >
+                                    Log in to save to Exhibition
+                                </Button>
                             )}
                         </Card.Body>
                     </Col>

@@ -1,17 +1,32 @@
-import React from "react";
-import { Form } from "react-bootstrap";
+import React, { useState } from "react";
+import { Form, Alert, Button } from "react-bootstrap";
 
 const ArtworkFilter = ({ onFilterChange, onDateFilterChange, selectedMuseum, startDate, endDate }) => {
+    const [dateError, setDateError] = useState("");
+    const [tempStartDate, setTempStartDate] = useState(startDate || ""); 
+    const [tempEndDate, setTempEndDate] = useState(endDate || "");
+    const [tempMuseum, setTempMuseum] = useState(selectedMuseum || "");
+
     const handleMuseumChange = (e) => {
-        onFilterChange(e.target.value);
+        setTempMuseum(e.target.value);
     };
 
     const handleStartDateChange = (e) => {
-        onDateFilterChange(e.target.value, endDate);
+        setTempStartDate(e.target.value);
     };
 
     const handleEndDateChange = (e) => {
-        onDateFilterChange(startDate, e.target.value);
+        setTempEndDate(e.target.value);
+    };
+
+    const applyFilters = () => {
+        if (tempStartDate && tempEndDate && parseInt(tempStartDate) > parseInt(tempEndDate)) {
+            setDateError("Start date cannot be greater than end date.");
+        } else {
+            setDateError("");
+            onDateFilterChange(tempStartDate, tempEndDate);
+            onFilterChange(tempMuseum);
+        }
     };
 
     return (
@@ -26,7 +41,7 @@ const ArtworkFilter = ({ onFilterChange, onDateFilterChange, selectedMuseum, sta
                 <Form.Label style={{ color: "#0D0C0A", fontWeight: "bold" }}>Filter by Museum</Form.Label>
                 <Form.Control
                     as="select"
-                    value={selectedMuseum}
+                    value={tempMuseum}
                     onChange={handleMuseumChange}
                     style={{
                         color: "#0D0C0A", 
@@ -41,13 +56,15 @@ const ArtworkFilter = ({ onFilterChange, onDateFilterChange, selectedMuseum, sta
                     <option value="Art Institute of Chicago">Art Institute of Chicago</option>
                 </Form.Control>
             </Form.Group>
+
             <Form.Group className="mt-3">
                 <Form.Label style={{ color: "#0D0C0A", fontWeight: "bold" }}>Filter by Date Range</Form.Label>
+                {dateError && <Alert variant="danger">{dateError}</Alert>}
                 <div className="d-flex">
                     <Form.Control
                         type="number"
                         placeholder="Start Year"
-                        value={startDate}
+                        value={tempStartDate}
                         onChange={handleStartDateChange}
                         style={{
                             color: "#0D0C0A", 
@@ -61,7 +78,7 @@ const ArtworkFilter = ({ onFilterChange, onDateFilterChange, selectedMuseum, sta
                     <Form.Control
                         type="number"
                         placeholder="End Year"
-                        value={endDate}
+                        value={tempEndDate}
                         onChange={handleEndDateChange}
                         style={{
                             color: "#0D0C0A", 
@@ -73,6 +90,15 @@ const ArtworkFilter = ({ onFilterChange, onDateFilterChange, selectedMuseum, sta
                     />
                 </div>
             </Form.Group>
+            <div className="d-flex justify-content-center mt-4">
+                <Button 
+                    variant="dark" 
+                    onClick={applyFilters}
+                    style={{ fontWeight: "bold", minWidth: "150px" }}
+                >
+                    Apply Filter
+                </Button>
+            </div>
         </Form>
     );
 };

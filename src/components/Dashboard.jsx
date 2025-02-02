@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { db, auth } from "../utils/firebase"; 
+import { db } from "../utils/firebase"; 
 import { collection, getDocs } from "firebase/firestore"; 
-import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import ArtworkCard from "./ArtworkCard";
@@ -14,6 +13,7 @@ const Dashboard = () => {
     const [artworks, setArtworks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [viewMode, setViewMode] = useState("grid"); 
+    const [error, setError] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -23,29 +23,27 @@ const Dashboard = () => {
 
     const fetchArtworks = async () => {
         setLoading(true);
+        setError(null);
         try {
             const querySnapshot = await getDocs(collection(db, `users/${user.uid}/exhibition`));
             const fetchedArtworks = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             setArtworks(fetchedArtworks);
         } catch (error) {
             console.error("Error fetching artworks:", error);
+            setError("Failed to load your artworks. Please try again later.");
         }
         setLoading(false);
     };
 
-    const handleLogout = async () => {
-        try {
-            await signOut(auth);
-            navigate("/");
-        } catch (error) {
-            console.error("Error logging out:", error);
-        }
-    };
-
     return (
-        <Container className="mt-5" style={{ color: "#0D0C0A" }}>
+        <Container fluid style={{ width: "100%", padding: "0", margin: "0", color: "#0D0C0A" }}>
             <h3 className="text-center" style={{ fontWeight: "bold" }}>Your Exhibition ({artworks.length} artworks)</h3>
-            
+            {error && (
+                <div className="text-center mt-3">
+                    <p className="text-danger">{error}</p>
+                    <Button variant="dark" onClick={fetchArtworks}>Retry</Button>
+                </div>
+            )}
             <div className="d-flex justify-content-end my-3">
                 <Button 
                     onClick={() => setViewMode("grid")} 
@@ -89,7 +87,8 @@ const Dashboard = () => {
             
             {loading ? (
                 <div className="text-center">
-                    <Spinner animation="border" style={{ color: "#0D0C0A" }} />
+                    <Spinner animation="border" style={{ width: '4rem', height: '4rem', color: "#0D0C0A" }} />
+                    <p className="loading-text" style={{fontSize: "1.5rem", color: "#0D0C0A"}}>Loading...</p>
                 </div>
             ) : artworks.length > 0 ? (
                 viewMode === "grid" ? (
@@ -122,21 +121,21 @@ const Dashboard = () => {
                 )
             ) : (
                 <div className="text-center mt-4">
-    <p>No artworks in your exhibition yet.</p>
-    <p>
-        <Button 
-            variant="link" 
-            onClick={() => navigate("/artworks")} 
-            style={{
-                textDecoration: "underline",
-                color: "#0D0C0A",
-                fontWeight: "bold",
-            }}
-        >
-            Search for artworks here
-        </Button>
-    </p>
-</div>
+                    <p>No artworks in your exhibition yet.</p>
+                    <p>
+                        <Button 
+                            variant="link" 
+                            onClick={() => navigate("/artworks")} 
+                            style={{
+                                textDecoration: "underline",
+                                color: "#0D0C0A",
+                                fontWeight: "bold",
+                            }}
+                        >
+                            Search for artworks here
+                        </Button>
+                    </p>
+                </div>
             )}
         </Container>
     );

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Container, Row, Col, Spinner } from "react-bootstrap";
+import { Container, Row, Col, Spinner, Button } from "react-bootstrap";
 import { searchArtworks } from "../utils/api";
 import ArtworkCard from "./ArtworkCard"; 
 
@@ -15,12 +15,17 @@ function SearchResults() {
 
     const fetchResults = async () => {
       setIsLoading(true);
+      setError(null);
       try {
         const artworks = await searchArtworks(searchTerm);
-        setResults(artworks);
-        setIsLoading(false);
+        if (!artworks || artworks.length === 0) {
+          setError(`No results found for "${searchTerm}". Please try a different keyword.`);
+        } else {
+          setResults(artworks);
+        }
       } catch (err) {
-        setError("Something went wrong, please try again.");
+        setError("Failed to load artworks. Please check your internet connection or try again later.");
+      } finally {
         setIsLoading(false);
       }
     };
@@ -39,7 +44,8 @@ function SearchResults() {
   if (isLoading) {
     return (
       <Container className="d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
-        <Spinner animation="border" />
+        <Spinner animation="border" style={{ width: '4rem', height: '4rem', color: "#0D0C0A" }} />
+        <p className="loading-text" style={{fontSize: "1.5rem", color: "#0D0C0A"}}>Loading...</p>
       </Container>
     );
   }
@@ -53,7 +59,9 @@ function SearchResults() {
   }
 
   return (
-    <Container className="mt-4">
+    <Container fluid style={{ width: "100%", padding: "0", margin: "0" }}>
+      <h5 className="text-center">Artworks found for "{searchTerm}"</h5>
+      {error && <Alert variant="danger" className="text-center">{error}</Alert>}
       <Row>
         {results.length > 0 ? (
           results.map((artwork) => (
@@ -69,7 +77,10 @@ function SearchResults() {
             </Col>
           ))
         ) : (
-          <p>No artworks found for "{searchTerm}".</p>
+          <div>
+          <p>Search results for "{searchTerm}".</p>
+          <Button variant="dark" onClick={() => window.location.reload()}>Retry</Button>
+          </div>
         )}
       </Row>
     </Container>

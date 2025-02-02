@@ -18,14 +18,17 @@ const Register = () => {
     const handleRegister = async (e) => {
         e.preventDefault();
         setError("");
+        setLoading(true);
 
         if (password.length < 6) {
             setError("Password must be at least 6 characters long.");
+            setLoading(false);
             return;
         }
 
         if (password !== confirmPassword) {
             setError("Passwords do not match.");
+            setLoading(false);
             return;
         }
 
@@ -78,13 +81,14 @@ const Register = () => {
     if (loading) {
         return (
             <Container className="d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
-                <Spinner animation="border" style={{ color: "#0D0C0A" }} />
+                <Spinner animation="border" style={{ width: '4rem', height: '4rem', color: "#0D0C0A" }} />
+                <p className="loading-text" style={{fontSize: "1.5rem", color: "#0D0C0A"}}>Loading...</p>
             </Container>
         );
     }
 
     return (
-        <Container className="mt-5">
+        <Container fluid style={{ width: "100%", padding: "0", margin: "0" }}>
             <h2 className="mb-4 text-center" style={{ color: "#0D0C0A", fontWeight: "bold" }}>Register</h2>
             {error && <Alert variant="danger" style={{ backgroundColor: "#F8D7DA", color: "#721C24", borderColor: "#F5C6CB" }}>{error}</Alert>}
             <Form

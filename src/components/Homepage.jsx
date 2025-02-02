@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Spinner, Button, Carousel } from 'react-bootstrap';
+import { Container, Row, Col, Spinner, Button, Carousel, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { getUnifiedArtworks } from '../utils/api';
 import ArtworkCard from './ArtworkCard';
@@ -8,16 +8,24 @@ import ManetImage from '../assets/Manet.jpg';
 const Homepage = () => {
     const [artworks, setArtworks] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchArtworks = async () => {
             setLoading(true);
+            setError(null);
             try {
                 const data = await getUnifiedArtworks(1, 6); 
                 setArtworks(data);
-            } catch (error) {
-                console.error('Failed to fetch artworks', error);
+            if (data.length === 0) {
+                    setError("No featured artworks available at the moment.");
+                } else {
+                    setArtworks(data);
+                }
+            } catch (err) {
+                console.error("Error fetching artworks:", err.message);
+                setError("Failed to load artworks. Please check your internet connection and try again.");
             } finally {
                 setLoading(false);
             }
@@ -37,7 +45,7 @@ const Homepage = () => {
     }, []);
 
     return (
-        <Container >
+        <Container fluid style={{ width: "100%", padding: "0", margin: "0" }}>
             <div style={{ position: 'relative', textAlign: 'center' }}>
                 <img 
                     src={ManetImage} 
@@ -63,6 +71,7 @@ const Homepage = () => {
                         Choose your favourite artworks and create your exhibition
                     </h3>
             </div>
+            {error && <Alert variant="danger" className="text-center">{error}</Alert>}
             {loading ? (
                 <div>
                     <Spinner animation="border" style={{ width: '4rem', height: '4rem', color: "#0D0C0A" }} />

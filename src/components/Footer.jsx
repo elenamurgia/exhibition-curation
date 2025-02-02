@@ -3,7 +3,7 @@ import { Container, Row, Col } from "react-bootstrap";
 
 const Footer = () => {
   return (
-    <footer style={{ backgroundColor: "#0D0C0A", color: "#FFFFFF", padding: "1.5rem 0" }}>
+    <footer style={{ marginTop: "auto", backgroundColor: "#0D0C0A", color: "#FFFFFF", padding: "1.5rem 0" }}>
       <Container>
         <Row className="justify-content-center text-center">
           <Col xs={12}>
@@ -35,7 +35,7 @@ const Footer = () => {
                 rel="noopener noreferrer" 
                 style={{ color: "#FFFFFF", textDecoration: "none", marginLeft: "10px" }}
               >
-                Art Institute of Chicago (ARTIC)
+                Art Institute of Chicago 
               </a> | 
               <a 
                 href="https://www.metmuseum.org/" 

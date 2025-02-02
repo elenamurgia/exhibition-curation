@@ -27,9 +27,22 @@ const Login = () => {
 
             navigate("/dashboard");
         } catch (error) {
-            setError("Invalid email or password.");
-            console.error("Error logging in:", error.message);
+            let errorMessage = "Invalid email or password.";
 
+            if (error.code === "auth/invalid-email") {
+                errorMessage = "Invalid email format. Please check your email.";
+            } else if (error.code === "auth/user-not-found") {
+                errorMessage = "No account found with this email. Please register first.";
+            } else if (error.code === "auth/wrong-password") {
+                errorMessage = "Incorrect password. Please try again.";
+            } else if (error.code === "auth/too-many-requests") {
+                errorMessage = "Too many failed attempts. Please try again later.";
+            } else if (error.code === "auth/network-request-failed") {
+                errorMessage = "Network error. Please check your internet connection.";
+            }
+
+            setError(errorMessage);
+            console.error("Error logging in:", error.message);
             setEmail("");
             setPassword("");
         } finally {
@@ -38,9 +51,9 @@ const Login = () => {
     };
 
     return (
-        <Container className="mt-5">
+        <Container fluid style={{ width: "100%", padding: "0", margin: "0" }}>
             <h2 className="mb-4 text-center" style={{ color: "#0D0C0A", fontWeight: "bold" }}>Login</h2>
-            {error && <Alert variant="danger">{error}</Alert>}
+            {error && <Alert variant="danger" className="text-center">{error}</Alert>}
             <Form
                 onSubmit={handleLogin}
                 key={formKey} 
@@ -84,7 +97,7 @@ const Login = () => {
                     style={{ backgroundColor: "#0D0C0A", color: "#FFFFFF", fontWeight: "bold" }}
                 >
                     {loading ? (
-                        <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
+                        <Spinner animation="border" style={{ width: '4rem', height: '4rem', color: "#0D0C0A" }} />
                     ) : (
                         "Login"
                     )}

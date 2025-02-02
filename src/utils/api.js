@@ -89,7 +89,7 @@ const searchHarvardArtworks = async (query, page = 1, size = 20) => {
             },
         });
         return response.data.records
-            .filter((artwork) => artwork.primaryimageurl) 
+            .filter((artwork) => artwork.primaryimageurl && (artwork.title.toLowerCase().includes(query.toLowerCase()) || (artwork.people?.[0]?.name || '').toLowerCase().includes(query.toLowerCase())))
             .map((artwork) => ({
                 id: artwork.id,
                 title: artwork.title,
@@ -165,14 +165,16 @@ const searchRijksmuseumArtworks = async (query, page = 1, size = 20) => {
                 imgonly: true,
             },
         });
-        return response.data.artObjects.map((artwork) => ({
-            id: artwork.objectNumber,
-            title: artwork.title,
-            image: artwork.webImage?.url,
-            artist: artwork.principalOrFirstMaker,
-            date: artwork.date_display,
-            source: 'Rijksmuseum',
-        }));
+        return response.data.artObjects
+            .filter((artwork) => artwork.webImage?.url && (artwork.title.toLowerCase().includes(query.toLowerCase()) || artwork.principalOrFirstMaker.toLowerCase().includes(query.toLowerCase())))
+            .map((artwork) => ({
+                id: artwork.objectNumber,
+                title: artwork.title,
+                image: artwork.webImage?.url,
+                artist: artwork.principalOrFirstMaker,
+                date: artwork.date_display,
+                source: 'Rijksmuseum',
+            }));
     } catch (error) {
         console.error('Error searching Rijksmuseum artworks:', error.message);
         return [];
@@ -236,7 +238,7 @@ const searchArticArtworks = async (query, page = 1, size = 20) => {
             },
         });
         return response.data.data
-            .filter((artwork) => artwork.image_id) 
+            .filter((artwork) => artwork.image_id && (artwork.title.toLowerCase().includes(query.toLowerCase()) || (artwork.artist_title || '').toLowerCase().includes(query.toLowerCase())))
             .map((artwork) => ({
                 id: artwork.id,
                 title: artwork.title,
@@ -320,14 +322,16 @@ const searchMetArtworks = async (query, page = 1, size = 20) => {
                     const artworkResponse = await axiosInstance.get(`${metApi}/objects/${id}`);
                     const artwork = artworkResponse.data;
 
-                    return {
-                        id: artwork.objectID?.toString(),
-                        title: artwork.title || "Untitled",
-                        image: artwork.primaryImage || artwork.primaryImageSmall,
-                        artist: artwork.artistDisplayName || 'Unknown Artist',
-                        date: artwork.objectDate,
-                        source: 'MET Museum',
-                    };
+                    if (artwork.title.toLowerCase().includes(query.toLowerCase()) || (artwork.artistDisplayName || '').toLowerCase().includes(query.toLowerCase())) {
+                        return {
+                            id: artwork.objectID?.toString(),
+                            title: artwork.title || "Untitled",
+                            image: artwork.primaryImage || artwork.primaryImageSmall,
+                            artist: artwork.artistDisplayName || 'Unknown Artist',
+                            date: artwork.objectDate,
+                            source: 'MET Museum',
+                        };
+                    }
                 } catch {
                     return null; 
                 }
@@ -432,7 +436,13 @@ export const searchArtworks = async (query, page = 1, size = 20) => {
             searchArticArtworks(query, page, size),
             searchMetArtworks(query, page, size),
         ]);
-        return [...harvardResults, ...rijksmuseumResults, ...articResults, ...metResults];
+        const combinedResults = [...harvardResults, ...rijksmuseumResults, ...articResults, ...metResults];
+
+        if (combinedResults.length === 0) {
+            console.warn(`No results found for query: "${query}"`);
+        }
+
+        return combinedResults;
     } catch (error) {
         console.error('Error performing search:', error.message);
         return [];

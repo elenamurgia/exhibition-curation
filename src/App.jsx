@@ -11,10 +11,23 @@ import Register from "./components/Register";
 import PrivateRoute from "./components/PrivateRoute";
 import Footer from "./components/Footer";
 
-
 const App = () => (
-  <div className="row justify-content-center align-items-center" style={{ width: "100vw", height: "auto" }}>
+  <div style={{
+    display: "flex",
+    flexDirection: "column",
+    minHeight: "100vh",
+    width: "100vw",  
+    overflowX: "hidden",  
+  }}>
     <Header />
+    <div style={{ 
+      flex: 1,
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "stretch", 
+      width: "100%", 
+      padding: "20px",
+    }}> 
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/search/:searchTerm" element={<SearchResults />} />
@@ -24,6 +37,7 @@ const App = () => (
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
       </Routes>
+    </div>
     <Footer />
   </div>
 );
