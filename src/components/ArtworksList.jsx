@@ -83,17 +83,25 @@ const ArtworksList = () => {
 
     useEffect(() => {
         if (sortBy !== "none") {
-            const sortedData = [...filteredArtworks].sort((a, b) => {
-                if (!a[sortBy] || !b[sortBy]) return 0;
-                if (sortBy === 'date') return (parseInt(a.date) || 0) - (parseInt(b.date) || 0);
-                return a[sortBy].localeCompare(b[sortBy]);
+            let sortedData = [...artworks];
+
+            sortedData.sort((a, b) => {
+                const valA = a[sortBy] || "";
+                const valB = b[sortBy] || "";
+
+                if (sortBy === "date") {
+                    const dateA = parseInt(valA) || 0;
+                    const dateB = parseInt(valB) || 0;
+
+                    return sortOrder === "asc" ? dateA - dateB : dateB - dateA;
+                }
+
+                return sortOrder === "asc" ? valA.localeCompare(valB) : valB.localeCompare(valA);
             });
-            if (sortOrder === "desc") sortedData.reverse();
+
             setFilteredArtworks(sortedData);
-        } else {
-            setFilteredArtworks(artworks);
         }
-    }, [sortBy, sortOrder]);
+    }, [sortBy, sortOrder, artworks]); 
 
     return (
         <Container fluid style={{ width: "100%", padding: "0", margin: "0" }}>
@@ -114,8 +122,8 @@ const ArtworksList = () => {
                         <Dropdown.Item onClick={() => handleSortChange("title", "desc")}>Title (Z-A)</Dropdown.Item>
                         <Dropdown.Item onClick={() => handleSortChange("artist", "asc")}>Artist (A-Z)</Dropdown.Item>
                         <Dropdown.Item onClick={() => handleSortChange("artist", "desc")}>Artist (Z-A)</Dropdown.Item>
-                        <Dropdown.Item onClick={() => handleSortChange("date", "asc")}>Date (0-2025)</Dropdown.Item>
-                        <Dropdown.Item onClick={() => handleSortChange("date", "desc")}>Date (2025-0)</Dropdown.Item>
+                        <Dropdown.Item onClick={() => handleSortChange("date", "asc")}>Date (Asc)</Dropdown.Item>
+                        <Dropdown.Item onClick={() => handleSortChange("date", "desc")}>Date (Desc)</Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
                 <Button 
