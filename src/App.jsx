@@ -9,6 +9,7 @@ import Dashboard from "./components/Dashboard";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import PrivateRoute from "./components/PrivateRoute";
+import Footer from "./components/Footer";
 
 
 const App = () => (
@@ -23,6 +24,7 @@ const App = () => (
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
       </Routes>
+    <Footer />
   </div>
 );
 
