@@ -8,7 +8,7 @@ Exhibition Curator is a web application designed for art enthusiasts to explore 
 - Art Institute of Chicago
 - The Met
 
-Visit the hosted version of the application here: [Exhibition Curator] (https://exhibition-curator-six.vercel.app/) 
+Visit the hosted version of the application here: [Exhibition Curator](https://exhibition-curator-six.vercel.app/) 
 
 ## Features
 - Browse and search artworks from Harvard Art Museums, Rijksmuseum, Art Institute of Chicago and The Met APIs
