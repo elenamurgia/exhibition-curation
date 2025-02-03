@@ -194,7 +194,7 @@ function ArtworkDetails() {
                                     className="me-2"
                                     onClick={handleLoginRedirect}
                                 >
-                                    Log in to save to Exhibition
+                                    Log in to add to Exhibition
                                 </Button>
                             )}
                         </Card.Body>
