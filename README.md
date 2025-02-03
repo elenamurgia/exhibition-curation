@@ -8,7 +8,7 @@ Exhibition Curator is a web application designed for art enthusiasts to explore 
 - Art Institute of Chicago
 - The Met
 
-Visit the hosted version of the application here: [Exhibition Curator](https://exhibition-curator-six.vercel.app/) 
+Please find the link to the hosted version of the application here: [Exhibition Curator](https://exhibition-curator-six.vercel.app/) 
 
 ## Features
 - Browse and search artworks from Harvard Art Museums, Rijksmuseum, Art Institute of Chicago and The Met APIs
@@ -44,12 +44,12 @@ Ensure you have the following installed on your system:
 ### Environment Variables
 Create a `.env` file in the root directory and add the following environment variables:
 ```env
-VITE_FIREBASE_API_KEY=your_firebase_api_key
-VITE_FIREBASE_AUTH_DOMAIN=your_firebase_auth_domain
-VITE_FIREBASE_PROJECT_ID=your_firebase_project_id
-VITE_FIREBASE_STORAGE_BUCKET=your_firebase_storage_bucket
-VITE_FIREBASE_MESSAGING_SENDER_ID=your_firebase_messaging_sender_id
-VITE_FIREBASE_APP_ID=your_firebase_app_id
+VITE_APP_FIREBASE_API_KEY=your_firebase_api_key
+VITE_APP_FIREBASE_AUTH_DOMAIN=your_firebase_auth_domain
+VITE_APP_FIREBASE_PROJECT_ID=your_firebase_project_id
+VITE_APP_FIREBASE_STORAGE_BUCKET=your_firebase_storage_bucket
+VITE_APP_FIREBASE_MESSAGING_SENDER_ID=your_firebase_messaging_sender_id
+VITE_APP_FIREBASE_APP_ID=your_firebase_app_id
 VITE_HARVARD_API_KEY=your_harvard_art_museums_api_key
 VITE_RIJKSMUSEUM_API_KEY=your_rijksmuseum_api_key
 ```
