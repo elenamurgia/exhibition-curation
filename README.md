@@ -24,6 +24,13 @@ Please find the link to the hosted version of the application here: [Exhibition 
 - **Authentication & Storage**: Firebase
 - **Build Tools**: Vite
 
+## Test Credentials
+
+You can use the following credentials to test the application:
+
+- **Email:** test.user@example.com
+- **Password:** Test1234!
+
 ## Getting Started
 ### Prerequisites
 Ensure you have the following installed on your system:
